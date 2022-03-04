@@ -1,0 +1,76 @@
+﻿@using AppWeb.Models
+@model List<ViajeCls>
+
+@{
+    ViewBag.Title = "Index";
+    List<SelectListItem> ListaLugar = (List<SelectListItem>)ViewBag.ListaLugar;
+    List<SelectListItem> ListaBus = (List<SelectListItem>)ViewBag.ListaBus;
+}
+
+<h2>Index</h2>
+<!-- Button trigger modal -->
+<button type="button" onclick="Agregar()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Agregar
+</button>
+
+@Html.Partial("_TablaViaje", Model)
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @using (Ajax.BeginForm("Guardar", "Viaje", null, new AjaxOptions
+            {
+                HttpMethod = "POST",
+                OnSuccess = "Guardar",
+                UpdateTargetId = "Error"
+                /*UpdateTargetId = "DivRol",
+                InsertionMode = InsertionMode.Replace*/
+            }))
+            {
+                @Html.Hidden("Titulo")
+                <div class="modal-body">
+                    <div>
+                        @Html.Label("Lugar de Origen")
+                        @Html.DropDownList("IdLugarOrigen", ListaLugar, new { @class = "form-control" })
+                    </div>
+                    <div>
+                        @Html.Label("Lugar Destino")
+                        @Html.DropDownList("IdLugarDestino", ListaLugar, new { @class = "form-control" })
+                    </div>
+                    <div>
+                        @Html.Label("Precio")
+                        @Html.Editor("Precio", null, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                    </div>
+                    <div>
+                        @Html.Label("Bus")
+                        @Html.DropDownList("IdBus", ListaBus, new { @class = "form-control" })
+                    </div>
+                    <div>
+                        @Html.Label("Número de Asientos")
+                        @Html.Editor("Numero", null, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                    </div>
+                    <div>
+                        @Html.Label("Foto")
+                        <img width="150" height="150" id="imgFoto" style="display:block" />
+                        @Html.TextBox("Foto", "", new { type = "file", id = "fupFoto" })
+                    </div>
+                    <div>
+                        @Html.Hidden("NombreFoto")
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="BtnCerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+                <div id="Error">
+
+                </div>
+            }
+        </div>
+    </div>
+</div>

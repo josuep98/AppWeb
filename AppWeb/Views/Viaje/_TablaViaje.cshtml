@@ -1,0 +1,30 @@
+﻿@using AppWeb.Models
+@model List<ViajeCls>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <td>@Html.LabelFor(p => Model[0].IdViaje)</td>
+            <td>@Html.LabelFor(p => Model[0].NombreOrigen)</td>
+            <td>@Html.LabelFor(p => Model[0].NombreDestino)</td>
+            <td>@Html.LabelFor(p => Model[0].NombreBus)</td>
+            <td>Operaciones</td>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.IdViaje</td>
+                <td>@item.NombreOrigen</td>
+                <td>@item.NombreDestino</td>
+                <td>@item.NombreBus</td>
+                <td>
+                    <button type="button" onclick="Editar(@item.IdViaje)" class="bi bi-pencil-square btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" />
+                    <button type="button" onclick="Eliminar(@item.IdViaje)" class="bi bi-trash btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalConfirmacion" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

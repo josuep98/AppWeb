@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <div class="navbar-brand">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <img src="@Url.Content("~/Content/200-logo-cooperativa.png")" width="45px" height="45px" alt="imgf" />
+                </button>
+                @Html.ActionLink("Marca", "Index", "Marca", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Sucursal", "Index", "Sucursal", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Cliente", "Index", "Cliente", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Empleado", "Index", "Empleado", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Bus", "Index", "Bus", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Viaje", "Index", "Viaje", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Tipo Usuario", "Index", "TipoUsuario", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Rol", "Index", "Rol", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Página", "Index", "Pagina", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Usuario", "Index", "Usuario", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Rol Página", "Index", "RolPagina", new { area = "" }, new { @class = "navbar-brand" })
+
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+    </div>
+
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+</body>
+</html>

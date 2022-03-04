@@ -1,0 +1,26 @@
+﻿@using AppWeb.Models
+@model List<UsuarioCls>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Id Usuario</th>
+            <th>Nombre Persona</th>
+            <th>Nombre Usuario</th>
+            <th>Nombre Rol</th>
+            <th>Tipo Usuario</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.IdUsuario</td>
+                <td>@item.NombrePersona</td>
+                <td>@item.NombreUsuario</td>
+                <td>@item.NombreRol</td>
+                <td>@item.NombreTipoEmpleado</td>
+            </tr>
+        }
+    </tbody>
+</table>

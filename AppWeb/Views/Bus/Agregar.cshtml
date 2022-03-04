@@ -1,0 +1,144 @@
+﻿@model AppWeb.Models.BusCls
+
+@{
+    ViewBag.Title = "Agregar";
+
+    List<SelectListItem> ListaTipoBus = (List<SelectListItem>)ViewBag.ListaTipoBus;
+    List<SelectListItem> ListaMarca = (List<SelectListItem>)ViewBag.ListaMarca;
+    List<SelectListItem> ListaModelo = (List<SelectListItem>)ViewBag.ListaModelo;
+    List<SelectListItem> ListaSucursal = (List<SelectListItem>)ViewBag.ListaSucursal;
+}
+
+<h2>Agregar</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        @using (Html.BeginForm("Agregar", "Bus", FormMethod.Post, new { @id = "FrmAgregar" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <h4>BusCls</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IdSucursal, htmlAttributes: new { @class = "" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("IdSucursal", ListaSucursal, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.IdSucursal, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IdTipoBus, htmlAttributes: new { @class = "" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("IdTipoBus", ListaTipoBus, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.IdTipoBus, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Placa, htmlAttributes: new { @class = "" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Placa, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Placa, "", new { @class = "text-danger" })
+                        @if (Model != null && Model.MensajeError != null)
+                        {
+                            @Html.Label(Model.MensajeError, new { @class = "text-danger" })
+                        }
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FechaCompra, htmlAttributes: new { @class = "" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.FechaCompra, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FechaCompra, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IdModelo, htmlAttributes: new { @class = "" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("IdModelo", ListaModelo, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.IdModelo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NumeroFilas, htmlAttributes: new { @class = "" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.NumeroFilas, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NumeroFilas, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NumeroColumnas, htmlAttributes: new { @class = "" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.NumeroColumnas, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NumeroColumnas, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Observacion, htmlAttributes: new { @class = "" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Observacion, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Observacion, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IdMarca, htmlAttributes: new { @class = "" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("IdMarca", ListaMarca, null, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.IdMarca, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <!-- Button trigger modal -->
+                    <div style="margin:auto">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Guardar
+                        </button>
+                        @Html.ActionLink("Regresar", "Index", "Bus", null, new { @class = "btn btn-danger" })
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea editar los registros?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div style="padding:1em">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" onclick="Agregar()" class="btn btn-info">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function Agregar() {
+        var FrmAgregar = document.getElementById("FrmAgregar");
+        FrmAgregar.submit();
+    }
+</script>

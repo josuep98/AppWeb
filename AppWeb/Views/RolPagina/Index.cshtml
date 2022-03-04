@@ -1,0 +1,143 @@
+﻿@using AppWeb.Models
+@model List<RolPaginaCls>
+
+@{
+    ViewBag.Title = "Index";
+    List<SelectListItem> ListaRol = (List<SelectListItem>)ViewBag.ListaRol;
+    List<SelectListItem> ListaPagina = (List<SelectListItem>)ViewBag.ListaPagina;
+}
+
+<h2>Index</h2>
+
+<button type="button" onclick="Agregar()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Agregar
+</button>
+
+@using (Ajax.BeginForm("Filtrar", "", new AjaxOptions
+{
+    HttpMethod = "POST",
+    UpdateTargetId = "DivIdRolPagina",
+    InsertionMode = InsertionMode.Replace
+}, new { @id = "FrmFiltrado" }))
+{
+    @Html.DropDownList("IdRolDdl", ListaRol, new { @class = "form-control" })
+
+    <div id="DivIdRolPagina">
+        @Html.Partial("_TablaRolPagina", Model)
+    </div>
+}
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @using (Ajax.BeginForm("Guardar", "RolPagina", null, new AjaxOptions
+            {
+                HttpMethod = "POST",
+                OnSuccess = "Guardar",
+                UpdateTargetId = "DivRolError",
+                InsertionMode = InsertionMode.Replace
+            }))
+            {
+                @Html.Hidden("Titulo")
+                <div class="modal-body">
+                    <div>
+                        @Html.Label("Id Rol: ")
+                        @Html.DropDownList("IdRol", ListaRol, new { @class = "form-control" })
+                    </div>
+                    <div>
+                        @Html.Label("IdPagina: ")
+                        @Html.DropDownList("IdPagina", ListaPagina, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="BtnCerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+                <div id="DivRolError"></div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div class="modal fade" id="exampleModalConfirmacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea eliminar los registros?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div style="padding:1em">
+                <button type="button" id="CerrarConfirmacion" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" onclick="EliminarRegistro()" class="btn btn-info">Aceptar</button>
+            </div>
+            <div id="test"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var IdRol = document.getElementById("IdRol");
+    IdRol.onchange = function () {
+        $("#FrmFiltrado").trigger("submit");
+    }
+
+    function Agregar() {
+        Limpiar();
+        document.getElementById("Titulo").value = -1;
+    }
+
+    function Guardar(Respuesta) {
+        if (Respuesta == "1" || Respuesta == "0") {
+            $("#FrmFiltrado").trigger("submit");
+            alert("Se agregó correctamente");
+            document.getElementById("BtnCerrar").click();
+        } else {
+            alert("Ocurrió un error");
+        }
+    }
+
+    function Editar(IdRolPagina) {
+        Limpiar();
+        $.get("RolPagina/RecuperaInformacion/?IdRolPagina=" + IdRolPagina, function (data) {
+            document.getElementById("IdRol").value = data.IdRol;
+            document.getElementById("IdPagina").value = data.IdPagina;
+        })
+        document.getElementById("Titulo").value = IdRolPagina;
+    }
+
+    function Limpiar() {
+        var Controles = document.getElementsByClassName("form-control");
+        var Control;
+
+        for (var i = 0; i < Controles.length; i++) {
+            Control = Controles[i];
+            Control.value = "";
+        }
+    }
+
+    function Eliminar(IdRolPagina) {
+        document.getElementById("Titulo").value = IdRolPagina;
+        //alert(IdRolPagina);
+    }
+
+    function EliminarRegistro() {
+        var Titulo = document.getElementById("Titulo").value;
+        $.get("RolPagina/EliminarRolPagina?IdRolPagina=" + Titulo, function (data) {
+            if (data == 1) {
+                alert("Se ejecutó correctamente");
+                $("#FrmFiltrado").trigger("submit");
+                document.getElementById("CerrarConfirmacion").click();
+            } else {
+                alert("Ocurrió un error");
+            }
+        })
+    }
+
+</script>

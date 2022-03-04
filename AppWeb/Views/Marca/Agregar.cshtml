@@ -1,0 +1,51 @@
+﻿@using AppWeb.Models
+@model MarcaCls
+
+
+@{
+    ViewBag.Title = "Agregar";
+}
+
+<h2>Agregar</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <!--Siempre al crear un formulario usar Html.BeginForm-->
+        @using (Html.BeginForm("Agregar", "Marca", FormMethod.Post, new { @id = "frmAgregar" }))
+        {
+
+            <div>
+                @Html.LabelFor(p => p.Nombre)
+                @Html.TextBoxFor(p => p.Nombre, new { @class = "form-control" })
+                @Html.ValidationMessage("Nombre", new { @class = "text-danger" })
+                @if (Model != null && Model.MensajeError != null)
+                {
+                    @Html.Label(Model.MensajeError, new { @class = "text-danger" })
+                }
+            </div>
+
+            <div>
+                @Html.LabelFor(p => p.Descripcion)
+                @Html.TextBoxFor(p => p.Descripcion, new { @class = "form-control" })
+                @Html.ValidationMessage("Descripcion", new { @class = "text-danger" })
+            </div>
+            <br />
+            <div style="margin:auto">
+                <input type="submit" class="btn btn-primary" value="Guardar" />
+                @Html.ActionLink("Regresar", "Index", "Sucursal", null, new { @class = "btn btn-danger" })
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    var frmAgregar = document.getElementById("frmAgregar");
+    frmAgregar.onsubmit = function (e) {
+        e.preventDefault();
+
+        if (confirm("¿Deseas guardar los cambios?") == 1) {
+            frmAgregar.submit();
+        }
+
+    }
+</script>

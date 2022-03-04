@@ -1,0 +1,90 @@
+﻿@using AppWeb.Models
+@model List<EmpleadoCls>
+
+@{
+    ViewBag.Title = "Index";
+
+    List<SelectListItem> ListaTipoUsuario = (List<SelectListItem>)ViewBag.ListaTipoUsuario;
+}
+
+<h2>Index</h2>
+
+@Html.ActionLink("Agregar", "Agregar", "Empleado", null, new { @class = "btn btn-primary" })
+
+@using (Html.BeginForm("Index", "Empleado", FormMethod.Get, new { @id = "FrmBuscar" }))
+{
+    @Html.Label("Ingrese tipo de usuario: ")
+    @Html.DropDownList("IdTipoUsuario", ListaTipoUsuario)
+
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <td>@Html.LabelFor(p => Model[0].IdEmpleado)</td>
+                <td>@Html.LabelFor(p => Model[0].Nombre)</td>
+                <td>@Html.LabelFor(p => Model[0].ApPaterno)</td>
+                <td>@Html.LabelFor(p => Model[0].NombreTipoUsuario)</td>
+                <td>@Html.LabelFor(p => Model[0].NombreTipoContrato)</td>
+                <td>Operaciones</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.IdEmpleado</td>
+                    <td>@item.Nombre</td>
+                    <td>@item.ApPaterno</td>
+                    <td>@item.NombreTipoUsuario</td>
+                    <td>@item.NombreTipoContrato</td>
+                    <td>
+                        @Html.ActionLink(" ", "Editar", "Empleado", new { id = item.IdEmpleado }, new { @class = "bi bi-pencil-square btn btn-primary" })
+                        @*@Html.ActionLink(" ", "Eliminar", "Empleado", new { id = item.IdEmpleado }, new { @class = "bi bi-trash btn btn-danger" })*@
+
+                        <button type="button" onclick="MostrarPopUp(@item.IdEmpleado)" class="bi bi-trash btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        </button>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea eliminar los registros?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div style="padding:1em">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" onclick="Eliminar()" class="btn btn-info">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("Eliminar", "Empleado", FormMethod.Post, new { @id = "FrmEmpleado" }))
+{
+    @Html.Hidden("TxtIdEmpleado");
+}
+
+<script>
+    function MostrarPopUp(IdEmpleado) {
+        document.getElementById("TxtIdEmpleado").value = IdEmpleado;
+    }
+
+    function Eliminar() {
+        var FrmEmpleado = document.getElementById("FrmEmpleado");
+        FrmEmpleado.submit();
+    }
+
+    var IdTipoUsuario = document.getElementById("IdTipoUsuario");
+    IdTipoUsuario.onchange = function () {
+        var FrmBuscar = document.getElementById("FrmBuscar");
+        FrmBuscar.submit();
+    }
+
+</script>

@@ -1,0 +1,148 @@
+﻿@using AppWeb.Models
+@model List<RolCls>
+
+@{
+    ViewBag.Title = "Index";
+
+}
+
+<h2>Index</h2>
+
+<!-- Button trigger modal -->
+<button type="button" onclick="Agregar()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Agregar
+</button>
+
+@using (Ajax.BeginForm("Filtro", "", new AjaxOptions
+{
+    HttpMethod = "POST",
+    UpdateTargetId = "DivRol",
+    InsertionMode = InsertionMode.Replace
+}, new { @id = "FrmFiltro" }))
+
+{
+    @Html.Label("Ingrese el nombre Rol: ")
+    @Html.TextBox("NombreRol", null, new { @class = "form-control" })
+    <div id="DivRol">
+        @Html.Partial("_TablaRol", Model)
+    </div>
+}
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @using (Ajax.BeginForm("Guardar", "Rol", null, new AjaxOptions
+            {
+                HttpMethod = "POST",
+                OnSuccess = "Guardar",
+                UpdateTargetId = "Error"
+                /*UpdateTargetId = "DivRol",
+                InsertionMode = InsertionMode.Replace*/
+            }))
+            {
+                @Html.Hidden("Titulo")
+                <div class="modal-body">
+                    <div>
+                        @Html.Label("Nombre Rol: ")
+                        @Html.TextBox("Nombre", null, new { @class = "form-control" })
+                    </div>
+                    <div>
+                        @Html.Label("Descripción: ")
+                        @Html.TextBox("Descripcion", null, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="BtnCerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+                <div id="Error">
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div class="modal fade" id="exampleModalConfirmacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea eliminar los registros?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div style="padding:1em">
+                <button type="button" id="CerrarConfirmacion" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" onclick="EliminarRegistro()" class="btn btn-info">Aceptar</button>
+            </div>
+            <div id="test"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var Nombre = document.getElementById("NombreRol");
+    Nombre.onkeyup = function () {
+        //Obtener id del formulario en una variable, si pasamos el id directamente en jquery no refresca
+        //hasta presionar un Enter
+        FrmFiltro = document.getElementById("FrmFiltro");
+        $(FrmFiltro).trigger("submit");
+    }
+
+    function Agregar() {
+        Limpiar();
+        document.getElementById("Titulo").value = -1;
+    }
+
+    function Limpiar() {
+        document.getElementById("Nombre").value = "";
+        document.getElementById("Descripcion").value = "";
+        document.getElementById("Error").innerHTML = "";
+    }
+
+    function Editar(id) {
+        Limpiar();
+        document.getElementById("Error").innerHTML = "";
+        document.getElementById("Titulo").value = id;
+        //Se recibe un objeto Json desde el controller a la vista mediante la url
+        $.get("Rol/RecuperaDatos/?Titulo=" + id, function (data) {
+            document.getElementById("Nombre").value = data.Nombre;
+            document.getElementById("Descripcion").value = data.Descripcion;
+        })
+
+    }
+
+    function Guardar(Resultado) {
+        if (Resultado == "1" || Resultado == "0") {
+            FrmFiltro = document.getElementById("FrmFiltro");
+            $(FrmFiltro).trigger("submit");
+            document.getElementById("BtnCerrar").click();
+            alert("Se guardo correctamente");
+        } else {
+            alert("No se pudo guardar")
+        }
+    }
+
+    function Eliminar(id) {
+        document.getElementById("Titulo").value = id;
+        document.getElementById("test").value = id;
+    }
+
+    function EliminarRegistro() {
+        var Titulo = document.getElementById("Titulo").value;
+        $.get("Rol/Eliminar/?IdRol=" + Titulo, function (data) {
+            if (data == 1) {
+                alert("Se ejecutó correctamente");
+                $(FrmFiltro).trigger("submit");
+                document.getElementById("CerrarConfirmacion").click();
+            }
+        })
+    }
+
+</script>
