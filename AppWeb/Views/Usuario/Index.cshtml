@@ -1,0 +1,111 @@
+﻿@using AppWeb.Models
+@model List<UsuarioCls>
+
+@{
+    ViewBag.Title = "Index";
+
+    List<SelectListItem> ListaRol = (List<SelectListItem>)ViewBag.ListaRol;
+    List<SelectListItem> ListaPersonas = (List<SelectListItem>)ViewBag.ListaPersonas;
+}
+
+<h2>Index</h2>
+
+<button type="button" onclick="Agregar()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Agregar
+</button>
+
+<!--Nombre de acción, Nombre controller-->
+@using (Ajax.BeginForm("Filtrar", "Usuario", null,
+    new AjaxOptions
+    {
+        HttpMethod = "POST",
+        UpdateTargetId = "DivUsuario",
+        InsertionMode = InsertionMode.Replace
+//Id de formulario Ajax
+}, new { @id = "FrmFiltrar" }))
+{
+
+    @Html.Label("Ingrese Nombre de la persona: ")
+    @Html.TextBox("NombrePersona", null, new { @class = "form-control" })
+
+    <div id="DivUsuario">
+        @Html.Partial("_TablaUsuario", Model)
+    </div>
+}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @using (Ajax.BeginForm("Guardar", "Usuario", null, new AjaxOptions
+            {
+                HttpMethod = "POST",
+                OnSuccess = "Guardar"
+                /*UpdateTargetId = "DivRol",
+                InsertionMode = InsertionMode.Replace*/
+            }))
+            {
+                @Html.Hidden("Titulo")
+                @Html.Hidden("NombrePersona")
+                <div class="modal-body">
+                    <div>
+                        @Html.Label("Id Usuario: ")
+                        @Html.TextBox("IdUsuario", null, new { @class = "form-control", @readonly = "true" })
+                    </div>
+                    <div>
+                        @Html.Label("Nombre de Usuario: ")
+                        @Html.TextBox("NombreUsuario", null, new { @class = "form-control" })
+                    </div>
+                    <div>
+                        @Html.Label("Contraseña: ")
+                        @Html.Password("Contra", null, new { @class = "form-control" })
+                    </div>
+
+                    <div>
+                        @Html.Label("Nombre Persona: ")
+                        @Html.DropDownList("Id", ListaPersonas, new { @class = "form-control" })
+                    </div>
+                    <div>
+                        @Html.Label("Nombre Rol: ")
+                        @Html.DropDownList("IdRol", ListaRol, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="BtnCerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var NombrePersona = document.getElementById("NombrePersona");
+    NombrePersona.onkeyup = function () {
+        $("FrmFiltrar").trigger("submit");
+    }
+
+    function Agregar() {
+        document.getElementById("Titulo").value = "1";
+    }
+
+    var Id = document.getElementById("Id");
+    Id.onchange = function () {
+        document.getElementById("NombrePersona").value = Id.options[Id.selectedIndex].text;
+    }
+
+    function Guardar(Respuesta) {
+        if (Respuesta >= 1) {
+            alert("Se ejecutó correctamente!");
+            document.getElementById("BtnCerrar").click();
+        } else {
+            alert("Ocurrió un error!");
+        }
+    }
+
+</script>

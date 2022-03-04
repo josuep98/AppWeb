@@ -1,0 +1,164 @@
+﻿@model List<AppWeb.Models.PaginaCls>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<!-- Button trigger modal -->
+<button type="button" onclick="Agregar()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Agregar
+</button>
+
+<p>
+    @using (Ajax.BeginForm("Filtrar", "", new AjaxOptions
+    {
+        HttpMethod = "POST",
+        UpdateTargetId = "DivPagina",
+        InsertionMode = InsertionMode.Replace
+    }, new { @id = "FrmFiltrar" }))
+    {
+        @Html.Label("Ingrese Mensaje: ")
+        @Html.TextBox("MensajeFiltro", null, new { @class = "form-control" })
+        <div id="DivPagina">
+            @Html.Partial("_TablaPagina", Model)
+        </div>
+    }
+</p>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @using (Ajax.BeginForm("Guardar", "Pagina", null, new AjaxOptions
+            {
+                HttpMethod = "POST",
+                OnSuccess = "Guardar",
+                /*UpdateTargetId = "DivRol",
+                InsertionMode = InsertionMode.Replace*/
+                InsertionMode = InsertionMode.Replace,
+                UpdateTargetId = "DivError"
+            }))
+            {
+                @Html.Hidden("Titulo")
+                <div class="modal-body">
+                    <div>
+                        @Html.Label("Mensaje Link: ")
+                        @Html.TextBox("Mensaje", null, new { @class = "form-control" })
+                    </div>
+                    <div>
+                        @Html.Label("Acción: ")
+                        @Html.TextBox("Accion", null, new { @class = "form-control" })
+                    </div>
+                    <div>
+                        @Html.Label("Controlador: ")
+                        @Html.TextBox("Controlador", null, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="BtnCerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+                <div id="DivError">
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div class="modal fade" id="exampleModalConfirmacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea eliminar los registros?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div style="padding:1em">
+                <button type="button" id="CerrarConfirmacion" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" onclick="EliminarRegistro()" class="btn btn-info">Aceptar</button>
+            </div>
+            <div id="test"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var FrmFiltrar = document.getElementById("FrmFiltrar");
+    var MensajeFiltrar = document.getElementById("MensajeFiltrar");
+
+    //Toma la búsqueda a medida que se digita cada letra
+    MensajeFiltrar.onkeyup = function () {
+        $("#FrmFiltrar").trigger("submit");
+    }
+
+    //Toma la búsqueda despues de presionar la tecla Enter
+    /*FrmFiltrar.onsubmit = function () {
+        $("#FrmFiltrar").trigger("submit");
+    }*/
+    function Agregar() {
+        Limpiar();
+        document.getElementById("Titulo").value = "-1";
+    }
+
+    function Guardar(Resultado) {
+        if (Resultado == "1" || Resultado == "0") {
+            $("#FrmFiltrar").trigger("submit");
+            document.getElementById("BtnCerrar").click();
+            alert("Se guardo correctamente");
+        } else {
+            alert("No se pudo guardar")
+        }
+    }
+
+    function Editar(IdPagina) {
+        Limpiar();
+
+        $.get("Pagina/RecuperarInformacion/?IdPagina=" + IdPagina, function (data) {
+
+            document.getElementById("Mensaje").value = data.Mensaje;
+            document.getElementById("Accion").value = data.Accion;
+            document.getElementById("Controlador").value = data.Controlador;
+
+        })
+
+        document.getElementById("Titulo").value = IdPagina;
+    }
+
+    function Limpiar() {
+        var Controles = document.getElementsByClassName("form-control");
+        var Control;
+
+        for (var i = 0; i < Controles.length; i++) {
+            Control = Controles[i];
+            Control.value = "";
+        }
+    }
+
+    function Eliminar(IdPagina) {
+        //alert(IdPagina);
+        document.getElementById("Titulo").value = IdPagina;
+    }
+
+    function EliminarRegistro() {
+        var IdPagina = document.getElementById("Titulo").value;
+        $.get("Pagina/EliminarPagina/?IdPagina=" + IdPagina, function (data) {
+            if (data == 1) {
+                alert("Se eliminó correctamente");
+                $("#FrmFiltrar").trigger("submit");
+                document.getElementById("CerrarConfirmacion").click();
+            } else {
+                alert("Ocurrió un error");
+            }
+        })
+    }
+
+
+</script>

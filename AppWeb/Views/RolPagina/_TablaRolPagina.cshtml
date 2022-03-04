@@ -1,0 +1,27 @@
+﻿@using AppWeb.Models
+@model List<RolPaginaCls>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <td>@Html.LabelFor(p => Model[0].IdRolPagina)</td>
+            <td>@Html.LabelFor(p => Model[0].NombreRol)</td>
+            <td>@Html.LabelFor(p => Model[0].NombreMensaje)</td>
+            <td>Operaciones</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.IdRolPagina</td>
+                <td>@item.NombreRol</td>
+                <td>@item.NombreMensaje</td>
+                <td>
+                    <button type="button" onclick="Editar(@item.IdRolPagina)" class="bi bi-pencil-square btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" />
+                    <button type="button" onclick="Eliminar(@item.IdRolPagina)" class="bi bi-trash btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalConfirmacion" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

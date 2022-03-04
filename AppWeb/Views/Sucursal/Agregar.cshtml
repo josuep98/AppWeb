@@ -1,0 +1,69 @@
+﻿@using AppWeb.Models
+@model SucursalCls
+
+@{
+    ViewBag.Title = "Agregar";
+}
+
+<h2>Agregar</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        @using (Html.BeginForm("Agregar", "Sucursal", FormMethod.Post, new { @id = "FrmSucursal" }))
+        {
+
+            <div>
+                @Html.LabelFor(p => p.Nombre)
+                @Html.TextBoxFor(p => p.Nombre, new { @class = "form-control" })
+                @Html.ValidationMessage("Nombre", new { @class = "text-danger" })
+                @if (Model != null && Model.MensajeError != null)
+                {
+                    @Html.Label(Model.MensajeError, new { @class = "text-danger" })
+                }
+            </div>
+
+            <div>
+                @Html.LabelFor(p => p.Direccion)
+                @Html.TextBoxFor(p => p.Direccion, new { @class = "form-control" })
+                @Html.ValidationMessage("Direccion", new { @class = "text-danger" })
+            </div>
+
+            <div>
+                @Html.LabelFor(p => p.Telefono)
+                @Html.TextBoxFor(p => p.Telefono, new { @class = "form-control" })
+                @Html.ValidationMessage("Telefono", new { @class = "text-danger" })
+            </div>
+
+            <div>
+                @Html.LabelFor(p => p.Email)
+                @Html.TextBoxFor(p => p.Email, new { @class = "form-control" })
+                @Html.ValidationMessage("Email", new { @class = "text-danger" })
+            </div>
+
+            <div>
+                @Html.LabelFor(p => p.FechaApertura)
+                @Html.EditorFor(p => p.FechaApertura, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessage("FechaApertura", new { @class = "text-danger" })
+            </div>
+
+            <div style="margin:auto">
+                <input type="submit" value="Agregar" class="btn btn-primary" />
+                @Html.ActionLink("Regresar", "Index", "Sucursal", null, new { @class = "btn btn-danger" })
+            </div>
+
+        }
+    </div>
+</div>
+
+<script>
+    var FrmSucursal = document.getElementById("FrmSucursal");
+    FrmSucursal.onsubmit = function (e) {
+        e.preventDefault();
+        if (confirm("¿Desea guardar los cambios?") == 1) {
+            FrmSucursal.submit();
+        } else {
+            alert('No se han guardado los cambios!');
+        }
+    }
+
+</script>

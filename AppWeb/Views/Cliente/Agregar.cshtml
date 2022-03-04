@@ -1,0 +1,100 @@
+﻿@using AppWeb.Models
+@model ClienteCls
+
+
+@{
+    ViewBag.Title = "Agregar";
+    List<SelectListItem> ListaSexo = (List<SelectListItem>)ViewBag.Lista;
+}
+
+<h2>Agregar</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        @using (Html.BeginForm("Agregar", "Cliente", FormMethod.Post, new { @id = "FrmCliente" }))
+        {
+            <div>
+                @Html.LabelFor(p => p.Nombres)
+                @Html.TextBoxFor(p => p.Nombres, new { @class = "form-control" })
+                @Html.ValidationMessage("Nombres", new { @class = "text-danger" })
+                @if (Model != null && Model.MensajeError != null)
+                {
+                    @Html.Label(Model.MensajeError, new { @class = "text-danger" })
+                }
+            </div>
+
+            <div>
+                @Html.LabelFor(p => p.ApellidoPa)
+                @Html.TextBoxFor(p => p.ApellidoPa, new { @class = "form-control" })
+                @Html.ValidationMessage("ApellidoPa", new { @class = "text-danger" })
+            </div>
+
+            <div>
+                @Html.LabelFor(p => p.ApellidoMa)
+                @Html.TextBoxFor(p => p.ApellidoMa, new { @class = "form-control" })
+                @Html.ValidationMessage("ApellidoMa", new { @class = "text-danger" })
+            </div>
+
+            <div>
+                @Html.LabelFor(p => p.Email)
+                @Html.TextBoxFor(p => p.Email, new { @class = "form-control" })
+                @Html.ValidationMessage("Email", new { @class = "text-danger" })
+            </div>
+
+            <div>
+                @Html.LabelFor(p => p.Direccion)
+                @Html.EditorFor(p => p.Direccion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessage("Direccion", new { @class = "text-danger" })
+            </div>
+
+            <div>
+                @Html.LabelFor(p => p.IdSexo)
+                @Html.DropDownList("IdSexo", ListaSexo, null, new { @class = "form-control" })
+                @Html.ValidationMessage("IdSexo", new { @class = "text-danger" })
+            </div>
+
+            <div>
+                @Html.LabelFor(p => p.TelefonoFijo)
+                @Html.TextBoxFor(p => p.TelefonoFijo, new { @class = "form-control" })
+                @Html.ValidationMessage("TelefonoFijo", new { @class = "text-danger" })
+            </div>
+
+            <div>
+                @Html.LabelFor(p => p.Celular)
+                @Html.TextBoxFor(p => p.Celular, new { @class = "form-control" })
+                @Html.ValidationMessage("Celular", new { @class = "text-danger" })
+            </div>
+
+            <!-- Button trigger modal -->
+            <div style="margin:auto">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Guardar
+                </button>
+                @Html.ActionLink("Regresar", "Index", "Cliente", null, new { @class = "btn btn-danger" })
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea editar los registros?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div style="padding:1em">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" onclick="Agregar()" class="btn btn-info">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function Agregar() {
+        var FrmCliente = document.getElementById("FrmCliente");
+        FrmCliente.submit();
+    }
+</script>

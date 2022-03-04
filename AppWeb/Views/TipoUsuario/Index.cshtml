@@ -1,0 +1,80 @@
+﻿@model List<AppWeb.Models.TipoUsuarioCls>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@using (Html.BeginForm("Index", "TipoUsuario", FormMethod.Post, new { @id = "FrmBuscar" }))
+{
+
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => Model[0].IdTipoUsuario)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => Model[0].Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => Model[0].Descripcion)
+            </th>
+            <th>
+                Operaciones
+            </th>
+        </tr>
+        <tr>
+            <td>@Html.TextBox("IdTipoUsuario", null, new { @class = "form-control" })</td>
+            <td>@Html.TextBox("Nombre", null, new { @class = "form-control" })</td>
+            <td>@Html.TextBox("Descripcion", null, new { @class = "form-control" })</td>
+            <td></td>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdTipoUsuario)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+
+    </table>
+
+}
+
+<script>
+    var IdTipoUsuario = document.getElementById("IdTipoUsuario");
+    var Nombre = document.getElementById("Nombre");
+    var Descripcion = document.getElementById("Descripcion");
+    var FrmBuscar = document.getElementById("FrmBuscar");
+
+    IdTipoUsuario.onkeyup = function () {
+        FrmBuscar.submit();
+    }
+
+    Nombre.onkeyup = function () {
+        FrmBuscar.submit();
+    }
+
+    Descripcion.onkeyup = function () {
+        FrmBuscar.submit();
+    }
+
+</script>

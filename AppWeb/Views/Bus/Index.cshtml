@@ -1,0 +1,102 @@
+﻿@using AppWeb.Models
+@model List<BusCls>
+
+@{
+    ViewBag.Title = "Index";
+
+    List<SelectListItem> ListaTipoBus = (List<SelectListItem>)ViewBag.ListaTipoBus;
+    List<SelectListItem> ListaMarca = (List<SelectListItem>)ViewBag.ListaMarca;
+    List<SelectListItem> ListaModelo = (List<SelectListItem>)ViewBag.ListaModelo;
+    List<SelectListItem> ListaSucursal = (List<SelectListItem>)ViewBag.ListaSucursal;
+
+}
+
+<h2>Index</h2>
+
+@Html.ActionLink("Agregar", "Agregar", "Bus", new { @class = "btn btn-primary" })
+@*Indica donde comienza y donde termina*@
+@using (Html.BeginForm("Index", "Bus", FormMethod.Post, new { @id = "FrmBuscar" }))
+{
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <td>@Html.LabelFor(p => Model[0].IdBus)</td>
+                <td>@Html.LabelFor(p => Model[0].Placa)</td>
+                <td>@Html.LabelFor(p => Model[0].NombreModelo)</td>
+                <td>@Html.LabelFor(p => Model[0].NombreSucursal)</td>
+                <td>@Html.LabelFor(p => Model[0].NombreTipoBus)</td>
+                <td>Operaciones</td>
+            </tr>
+            <tr>
+                <td>@Html.TextBox("IdBus", null, new { @class = "form-control" })</td>
+                <td>@Html.TextBox("Placa", null, new { @class = "form-control" })</td>
+                <td>@Html.DropDownList("IdModelo", ListaModelo, null, new { @class = "form-control" })</td>
+                <td>@Html.DropDownList("IdSucursal", ListaSucursal, null, new { @class = "form-control" })</td>
+                <td>@Html.DropDownList("IdTipoBus", ListaTipoBus, null, new { @class = "form-control" })</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.IdBus</td>
+                    <td>@item.Placa</td>
+                    <td>@item.NombreModelo</td>
+                    <td>@item.NombreSucursal</td>
+                    <td>@item.NombreTipoBus</td>
+                    <td>
+                        @Html.ActionLink(" ", "Editar", "Bus", new { id = item.IdBus }, new { @class = "bi bi-pencil-square btn btn-primary" })
+                        @*Html.ActionLink(" ", "Eliminar", "Bus", new { id = item.IdBus }, new { @class = "bi bi-trash btn btn-danger" })*@
+                        <button type="button" onclick="MostrarPopUp(@item.IdBus)" class="bi bi-trash btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea eliminar los registros?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div style="padding:1em">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" onclick="Eliminar()" class="btn btn-info">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("Eliminar", "Bus", FormMethod.Post, new { @id = "FrmEliminar" }))
+{
+    @Html.Hidden("IdBus");
+}
+
+<script>
+    var FrmBuscar = document.getElementById("FrmBuscar");
+    var Controles = document.getElementsByClassName("form-control");
+    var NControles = Controles.length;
+    for (var i = 0; i < NControles; i++) {
+        Controles[i].onchange = function () {
+            FrmBuscar.submit();
+        }
+    }
+
+    function MostrarPopUp(IdBus) {
+        document.getElementById("IdBus").value = IdBus;
+    }
+
+    function Eliminar() {
+        var FrmEliminar = document.getElementById("FrmEliminar");
+        FrmEliminar.submit();
+    }
+
+</script>

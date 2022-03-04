@@ -1,0 +1,97 @@
+﻿@using AppWeb.Models
+@model List<ClienteCls>
+
+@{
+    ViewBag.Title = "Index";
+    List<SelectListItem> ListaSexo = (List<SelectListItem>)ViewBag.Lista;
+
+}
+
+<h2>Index</h2>
+
+@Html.ActionLink("Agregar", "Agregar", "Cliente", null, new { @class = "btn btn-primary" })
+
+@using (Html.BeginForm("Index", "Cliente", FormMethod.Get))
+{
+    @Html.Label("Ingrese sexo de los clientes: ")
+    @Html.DropDownList("IdSexo", ListaSexo)
+    <input type="submit" value="Buscar" class="btn btn-success" />
+
+    <table class="table table-bordered table-hover">
+
+        <thead>
+
+            <tr>
+                <td> @Html.LabelFor(p => Model[0].IdCliente) </td>
+                <td> @Html.LabelFor(p => Model[0].Nombres) </td>
+                <td> @Html.LabelFor(p => Model[0].ApellidoPa) </td>
+                <td> @Html.LabelFor(p => Model[0].ApellidoMa) </td>
+                <td> @Html.LabelFor(p => Model[0].Email) </td>
+                <td> @Html.LabelFor(p => Model[0].Direccion) </td>
+                <td> @Html.LabelFor(p => Model[0].TelefonoFijo) </td>
+                <td> @Html.LabelFor(p => Model[0].Celular) </td>
+                <td width="10%">Opciones</td>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td> @item.IdCliente </td>
+                    <td> @item.Nombres </td>
+                    <td> @item.ApellidoPa </td>
+                    <td> @item.ApellidoMa </td>
+                    <td> @item.Email </td>
+                    <td> @item.Direccion </td>
+                    <td> @item.TelefonoFijo </td>
+                    <td> @item.Celular </td>
+                    <td>
+                        @Html.ActionLink(" ", "Editar", "Cliente", new { id = item.IdCliente }, new { @class = "bi bi-pencil-square btn btn-primary" })
+                        @*@Html.ActionLink(" ", "Eliminar", "Cliente", new { id = item.IdCliente }, new { @class = "bi bi-trash btn btn-danger" })*@
+
+                        <button type="button" onclick="MostrarPopUp(@item.IdCliente)" class="bi bi-trash btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        </button>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+
+@using (Html.BeginForm("Eliminar", "Cliente", FormMethod.Post, new { @id = "FrmEnviar" }))
+{
+    @Html.Hidden("IdCliente");
+}
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea eliminar los registros?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div style="padding:1em">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" onclick="Eliminar()" class="btn btn-info">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function MostrarPopUp(IdCliente) {
+        document.getElementById("IdCliente").value = IdCliente;
+    }
+
+    function Eliminar() {
+        var FrmEnviar = document.getElementById("FrmEnviar");
+        FrmEnviar.submit();
+    }
+
+</script>

@@ -1,0 +1,43 @@
+﻿@model List<AppWeb.Models.PaginaCls>
+
+<table class="table table-bordered table-hovered">
+    <tr>
+        <th>
+            @Html.LabelFor(model => Model[0].IdPagina)
+        </th>
+        <th>
+            @Html.LabelFor(model => Model[0].Mensaje)
+        </th>
+        <th>
+            @Html.LabelFor(model => Model[0].Accion)
+        </th>
+        <th>
+            @Html.LabelFor(model => Model[0].Controlador)
+        </th>
+        <th>Operaciones</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdPagina)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mensaje)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Accion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Controlador)
+            </td>
+            <td>
+                <button type="button" onclick="Editar(@item.IdPagina)" class="bi bi-pencil-square btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" />
+                <button type="button" onclick="Eliminar(@item.IdPagina)" class="bi bi-trash btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalConfirmacion" />
+            </td>
+        </tr>
+    }
+
+</table>
+

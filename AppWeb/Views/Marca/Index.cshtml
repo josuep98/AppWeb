@@ -1,0 +1,58 @@
+﻿@using AppWeb.Models
+@model List<MarcaCls>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@Html.ActionLink("Agregar", "Agregar", "Marca", null, new { @class = "btn btn-primary" })
+
+@using (Html.BeginForm("Index", "Marca", FormMethod.Post))
+{
+    @Html.Label("Ingrese nombre marca: ")
+    @Html.TextBox("Nombre")
+
+    <input type="submit" class="btn btn-success" value="Buscar" />
+
+    <table class="table table-bordered table-hover">
+
+        <thead>
+
+            <tr>
+                <td width="10%"> @Html.LabelFor(p => Model[0].IidMarca) </td>
+                <td width="20%"> @Html.LabelFor(p => Model[0].Nombre) </td>
+                <td width="60%"> @Html.LabelFor(p => Model[0].Descripcion) </td>
+                <td width="10%"> Operaciones </td>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td> @item.IidMarca </td>
+                    <td> @item.Nombre </td>
+                    <td> @item.Descripcion </td>
+                    <td>
+                        @Html.ActionLink(" ", "Editar", "Marca", new { id = item.IidMarca }, new { @class = "bi bi-pencil-square btn btn-primary" })
+                        @Html.ActionLink(" ", "Eliminar", "Marca", new { id = item.IidMarca }, new { @class = "bi bi-trash btn btn-danger", @onclick = "eliminar()" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+<script>
+    function eliminar() {
+        if (confirm("¿Desea eliminar el registro realmente?") == 1) {
+            alert("Se eliminó correctamente")
+        } else {
+            event.preventDefault();
+        }
+    }
+</script>

@@ -1,0 +1,67 @@
+﻿@using AppWeb.Models
+@model List<SucursalCls>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@Html.ActionLink("Agregar", "Agregar", "Sucursal", null, new { @class = "btn btn-primary" })
+
+@using (Html.BeginForm("Index", "Sucursal", FormMethod.Get, new { @id = "FrmBuscar" }))
+{
+    @Html.Label("Ingrese nombre de sucursal: ")
+    @*Mismo nombre de propiedad en el Model*@
+    @Html.TextBox("Nombre")
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <td>@Html.LabelFor(p => Model[0].IdSucursal)</td>
+                <td>@Html.LabelFor(p => Model[0].Nombre)</td>
+                <td>@Html.LabelFor(p => Model[0].Direccion)</td>
+                <td>@Html.LabelFor(p => Model[0].Telefono)</td>
+                <td>@Html.LabelFor(p => Model[0].Email)</td>
+                <td>Operaciones</td>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.IdSucursal</td>
+                    <td>@item.Nombre</td>
+                    <td>@item.Direccion</td>
+                    <td>@item.Telefono</td>
+                    <td>@item.Email</td>
+                    <td>
+                        @Html.ActionLink(" ", "Editar", "Sucursal", new { id = item.IdSucursal }, new { @class = "bi bi-pencil-square btn btn-primary" })
+                        @Html.ActionLink(" ", "Eliminar", "Sucursal", new { id = item.IdSucursal }, new { @class = "bi bi-trash btn btn-danger", @onclick = "EliminarSucursal()" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+<script>
+
+    function EliminarSucursal() {
+        if (confirm("¿Deseas eliminar?") == 1) {
+            alert("Se eliminó correctamente");
+        } else {
+            event.preventDefault();
+        }
+    }
+
+    var Nombre = document.getElementById("Nombre");
+    Nombre.onkeyup = function () {
+        var FrmBuscar = document.getElementById("FrmBuscar");
+        FrmBuscar.submit();
+    }
+
+</script>
