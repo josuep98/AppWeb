@@ -88,7 +88,7 @@ namespace AppWeb.Controllers
             return View();
         }
 
-        public string Agregar(ViajeCls objViajeCls, HttpPostedFileBase Foto, int Titulo)
+        public string Guardar(ViajeCls objViajeCls, HttpPostedFileBase Foto, int Titulo)
         {
             string Mensaje = "";
 
@@ -99,9 +99,9 @@ namespace AppWeb.Controllers
                     var query = (from state in ModelState.Values
                                  from error in state.Errors
                                  select error.ErrorMessage).ToList();
-                    objViajeCls.Mensaje = "La foto es obligatorio";
-                    if (Foto == null)
+                    if (Foto == null && Titulo == -1)
                     {
+                        objViajeCls.Mensaje = "La foto es obligatorio";
                         Mensaje += "<ul><li>Debe ingresar una foto!</li></ul>";
                     }
                     Mensaje += "<ul class='list-group'>";
@@ -114,7 +114,7 @@ namespace AppWeb.Controllers
                 else
                 {
                     byte[] FotoBd = null;
-                    if (FotoBd != null)
+                    if (Foto != null)
                     {
                         BinaryReader Lector = new BinaryReader(Foto.InputStream);
                         FotoBd = Lector.ReadBytes((int)Foto.ContentLength);
@@ -134,23 +134,127 @@ namespace AppWeb.Controllers
                                 objViaje.BHABILITADO = 1;
                                 Bd.Viaje.Add(objViaje);
                                 Mensaje = Bd.SaveChanges().ToString();
-
+                                ListarCombos();
                                 if (Mensaje == "0")
                                 {
                                     Mensaje = "";
                                 }
                             }
+                            else
+                            {
+                                Viaje objViaje = Bd.Viaje.Where(p => p.IIDVIAJE == Titulo).First();
+                                objViaje.IIDLUGARDESTINO = objViajeCls.IdLugarDestino;
+                                objViaje.IIDLUGARORIGEN = objViajeCls.IdLugarOrigen;
+                                objViaje.PRECIO = objViajeCls.Precio;
+                                objViaje.FECHAVIAJE = objViajeCls.FechaViaje;
+                                objViaje.NUMEROASIENTOSDISPONIBLES = objViajeCls.Numero;
+                                if (Foto != null)
+                                {
+                                    objViaje.FOTO = FotoBd;
+                                }
+                                Mensaje = Bd.SaveChanges().ToString();
+                            }
                         }
                     }
+
+                    ListarCombos();
                 }
             }
             catch (Exception ex)
             {
                 Mensaje = "";
             }
-
             return Mensaje;
+        }
 
+        public ActionResult Filtrar(int LugarDestinoParametro)
+        {
+            List<ViajeCls> ListaViaje = new List<ViajeCls>();
+            using (var Bd = new BDPasajeEntities())
+            {
+                if (LugarDestinoParametro == null)
+                {
+                    ListaViaje = (from Viaje in Bd.Viaje
+                                  join LugarOrigen in Bd.Lugar
+                                  on Viaje.IIDLUGARORIGEN equals LugarOrigen.IIDLUGAR
+                                  join LugarDestino in Bd.Lugar
+                                  on Viaje.IIDLUGARDESTINO equals LugarDestino.IIDLUGAR
+                                  join Bus in Bd.Bus
+                                  on Viaje.IIDBUS equals Bus.IIDBUS
+                                  where Viaje.BHABILITADO == 1
+                                  select new ViajeCls
+                                  {
+                                      IdViaje = Viaje.IIDVIAJE,
+                                      NombreBus = Bus.PLACA,
+                                      NombreOrigen = LugarOrigen.NOMBRE,
+                                      NombreDestino = LugarDestino.NOMBRE
+                                  }).ToList();
+                }
+                else
+                {
+                    ListaViaje = (from Viaje in Bd.Viaje
+                                  join LugarOrigen in Bd.Lugar
+                                  on Viaje.IIDLUGARORIGEN equals LugarOrigen.IIDLUGAR
+                                  join LugarDestino in Bd.Lugar
+                                  on Viaje.IIDLUGARDESTINO equals LugarDestino.IIDLUGAR
+                                  join Bus in Bd.Bus
+                                  on Viaje.IIDBUS equals Bus.IIDBUS
+                                  where Viaje.BHABILITADO == 1 &&
+                                  Viaje.IIDLUGARDESTINO == LugarDestinoParametro
+                                  select new ViajeCls
+                                  {
+                                      IdViaje = Viaje.IIDVIAJE,
+                                      NombreBus = Bus.PLACA,
+                                      NombreOrigen = LugarOrigen.NOMBRE,
+                                      NombreDestino = LugarDestino.NOMBRE
+                                  }).ToList();
+                }
+            }
+            return PartialView("_TablaViaje", ListaViaje);
+        }
+
+        public JsonResult RecuperarInformacion(int IdViaje)
+        {
+            ViajeCls objviajeCls = new ViajeCls();
+            using (var Bd = new BDPasajeEntities())
+            {
+                Viaje objViaje = Bd.Viaje.Where(p => p.IIDVIAJE == IdViaje).First();
+                objviajeCls.IdViaje = objViaje.IIDVIAJE;
+                objviajeCls.IdBus = (int)objViaje.IIDBUS;
+                objviajeCls.IdLugarDestino = (int)objViaje.IIDLUGARDESTINO;
+                objviajeCls.IdLugarOrigen = (int)objViaje.IIDLUGARORIGEN;
+                objviajeCls.Precio = (decimal)objViaje.PRECIO;
+                //año-mes-día(pide)
+                //bdd (dd-mm-yyyy)
+                objviajeCls.FechaViajeCadena = ((DateTime)objViaje.FECHAVIAJE).ToString("yyyy-MM-dd");
+                objviajeCls.Numero = (int)objViaje.NUMEROASIENTOSDISPONIBLES;
+                objviajeCls.NombreFoto = objViaje.nombrefoto;
+
+                objviajeCls.Extension = Path.GetExtension(objViaje.nombrefoto);
+                objviajeCls.FotoRecuperarCadena = Convert.ToBase64String(objViaje.FOTO);
+            }
+
+            return Json(objviajeCls, JsonRequestBehavior.AllowGet);
+        }
+
+        public int EliminarViaje(int IdViaje)
+        {
+            int NumRegistrosAf = 0;
+            try
+            {
+                using (var Bd = new BDPasajeEntities())
+                {
+                    Viaje objViaje = Bd.Viaje.Where(p => p.IIDVIAJE == IdViaje).First();
+                    objViaje.BHABILITADO = 0;
+                    //0 no se hizo nada, 1 se realizó correctamente
+                    NumRegistrosAf = Bd.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                NumRegistrosAf = 0;
+            }
+            return NumRegistrosAf;
         }
 
     }

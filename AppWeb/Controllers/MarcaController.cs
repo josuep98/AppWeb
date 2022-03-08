@@ -1,15 +1,67 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AppWeb.Models;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace AppWeb.Controllers
 {
     //Entity framework solo se utiliza en el controlador, aqui hacemos nuestra interacción con nuestro mapeo
     public class MarcaController : Controller
     {
+
+        public FileResult GenerarPdf()
+        {
+            Document Doc = new Document();
+            byte[] Buffer;
+            using (MemoryStream Ms = new MemoryStream())
+            {
+                PdfWriter.GetInstance(Doc, Ms);
+                Doc.Open();
+
+                Paragraph Title = new Paragraph("Lista Marca");
+                Title.Alignment = Element.ALIGN_CENTER;
+                Doc.Add(Title);
+
+                Paragraph Espacio = new Paragraph("\n");
+                Doc.Add(Espacio);
+
+                //Número de columnas (3) de tabla
+                PdfPTable Table = new PdfPTable(3);
+                //Anchos columnas
+                float[] Values = new float[3] { 30, 40, 80 };
+                //Anchos a la tabla
+                Table.SetWidths(Values);
+                //Celdas y contenido - Color-alineado y centrado
+                PdfPCell Celda1 = new PdfPCell(new Phrase("Id Marca"));
+                Celda1.BackgroundColor = new BaseColor(130, 130, 130);
+                Celda1.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                Table.AddCell(Celda1);
+
+                PdfPCell Celda2 = new PdfPCell(new Phrase("Nombre"));
+                Celda2.BackgroundColor = new BaseColor(130, 130, 130);
+                Celda2.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                Table.AddCell(Celda2);
+
+                PdfPCell Celda3 = new PdfPCell(new Phrase("Descripción"));
+                Celda3.BackgroundColor = new BaseColor(130, 130, 130);
+                Celda3.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                Table.AddCell(Celda3);
+
+                Doc.Add(Table);
+                Doc.Close();
+
+                Buffer = Ms.ToArray();
+            }
+
+            return File(Buffer, "application/pdf");
+
+        }
+
         //GET: Marca
         //Los métodos del controller son las acciones que se utilizan en el RouteConfig
         public ActionResult Index(MarcaCls objMarcaCls)
@@ -31,6 +83,7 @@ namespace AppWeb.Controllers
                                       Nombre = Obj.NOMBRE,
                                       Descripcion = Obj.DESCRIPCION
                                   }).ToList();
+                    Session["Lista"] = ListaMarca;
                 }
                 else
                 {
@@ -44,6 +97,7 @@ namespace AppWeb.Controllers
                                       Nombre = Obj.NOMBRE,
                                       Descripcion = Obj.DESCRIPCION
                                   }).ToList();
+                    Session["Lista"] = ListaMarca;
                 }
             }
             return View(ListaMarca);

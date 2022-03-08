@@ -9,6 +9,8 @@
 
 @Html.ActionLink("Agregar", "Agregar", "Marca", null, new { @class = "btn btn-primary" })
 
+@Html.ActionLink("PDF", "GenerarPdf", "Marca", null, new { @class = "btn btn-primary" })
+
 @using (Html.BeginForm("Index", "Marca", FormMethod.Post))
 {
     @Html.Label("Ingrese nombre marca: ")
