@@ -13,8 +13,20 @@
     Agregar
 </button>
 
-@Html.Partial("_TablaViaje", Model)
+@using (Ajax.BeginForm("Filtrar", "Viaje", null, new AjaxOptions
+{
+    HttpMethod = "Post",
+    UpdateTargetId = "divViaje",
+    InsertionMode = InsertionMode.Replace
+}, new { @id = "frmFiltrar" }))
+{
+    @Html.Label("Ingrese lugar destino")
+    @Html.DropDownList("LugarDestinoParametro", ListaLugar, new { @class = "form-control" })
 
+    <div id="divViaje">
+        @Html.Partial("_TablaViaje", Model)
+    </div>
+}
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -30,7 +42,7 @@
                 UpdateTargetId = "Error"
                 /*UpdateTargetId = "DivRol",
                 InsertionMode = InsertionMode.Replace*/
-            }))
+            }, new { enctype = "multipart/form-data" }))
             {
                 @Html.Hidden("Titulo")
                 <div class="modal-body">
@@ -45,6 +57,10 @@
                     <div>
                         @Html.Label("Precio")
                         @Html.Editor("Precio", null, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                    </div>
+                    <div>
+                        @Html.Label("Fecha de viaje")
+                        @Html.Editor("FechaViaje", null, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
                     </div>
                     <div>
                         @Html.Label("Bus")
@@ -95,7 +111,14 @@
         Limpiar();
         document.getElementById("Titulo").value = IdViaje;
         $.get("Viaje/RecuperarInformacion/?IdViaje=" + IdViaje, function (data) {
-
+            document.getElementById("IdLugarOrigen").value = data.IdLugarOrigen;
+            document.getElementById("IdLugarDestino").value = data.IdLugarDestino;
+            document.getElementById("Precio").value = data.Precio;
+            document.getElementById("FechaViaje").value = data.FechaViajeCadena;
+            document.getElementById("IdBus").value = data.IdBus;
+            document.getElementById("Numero").value = data.Numero;
+            document.getElementById("Numero").value = data.Numero;
+            document.getElementById("imgFoto").src = "data:image/" + data.Extension + ";base64," + data.FotoRecuperarCadena;
         })
     }
 
@@ -116,7 +139,16 @@
         if (Respuesta == 1) {
             alert("Se ejecutó correctamente!");
             document.getElementById("BtnCerrar").click();
+            $('#frmFiltrar').trigger("submit");
+        } else {
+            alert("Ocurrió un error");
         }
+    }
+
+    //var frmFiltrar = document.getElementById("frmFiltrar");
+    var LugarDestinoParametro = document.getElementById("LugarDestinoParametro");
+    LugarDestinoParametro.onchange = function () {
+        $('#frmFiltrar').trigger("submit");
     }
 
 </script>

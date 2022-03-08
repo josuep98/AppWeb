@@ -42,6 +42,9 @@ namespace AppWeb.Models
         public string NombreFoto { get; set; }
 
         public string Mensaje { get; set; }
+        public string FechaViajeCadena { get; set; }
+        public string Extension { get; set; }
+        public string FotoRecuperarCadena { get; set; }
 
     }
 }
