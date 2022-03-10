@@ -9,7 +9,9 @@
 
 @Html.ActionLink("Agregar", "Agregar", "Marca", null, new { @class = "btn btn-primary" })
 
-@Html.ActionLink("PDF", "GenerarPdf", "Marca", null, new { @class = "btn btn-primary" })
+@Html.ActionLink("PDF", "GenerarPdf", "Marca", null, new { @class = "btn btn-primary", @target = "_blank" })
+
+@Html.ActionLink("Excel", "GenerarExcel", "Marca", null, new { @class = "btn btn-primary", @target = "_blank" })
 
 @using (Html.BeginForm("Index", "Marca", FormMethod.Post))
 {

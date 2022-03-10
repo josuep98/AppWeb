@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -7,12 +8,58 @@ using System.Web.Mvc;
 using AppWeb.Models;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 
 namespace AppWeb.Controllers
 {
     //Entity framework solo se utiliza en el controlador, aqui hacemos nuestra interacción con nuestro mapeo
     public class MarcaController : Controller
     {
+
+        public FileResult GenerarExcel()
+        {
+            byte[] buffer;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                //Todo el documento Excel
+                ExcelPackage ep = new ExcelPackage();
+                //Crear hoja
+                ep.Workbook.Worksheets.Add("Reporte");
+
+                ExcelWorksheet ew = ep.Workbook.Worksheets[0];
+
+                //Nombre de columnas
+                ew.Cells[1, 1].Value = "Id Marca";
+                ew.Cells[1, 2].Value = "Nombre";
+                ew.Cells[1, 3].Value = "Descripción";
+
+                ew.Column(1).Width = 20;
+                ew.Column(2).Width = 40;
+                ew.Column(3).Width = 180;
+
+                using (var Range = ew.Cells[1, 1, 1, 3])
+                {
+                    Range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    Range.Style.Font.Color.SetColor(Color.White);
+                    Range.Style.Fill.BackgroundColor.SetColor(Color.DarkRed);
+                }
+
+                List<MarcaCls> Lista = (List<MarcaCls>)Session["Lista"];
+
+                int nregistros = Lista.Count;
+                //Pendiente
+                for (int i = 0; i < nregistros; i++)
+                {
+
+                }
+                //Pendiente
+                ep.SaveAs(ms);
+                buffer = ms.ToArray();
+                return File(buffer, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            }
+        }
 
         public FileResult GenerarPdf()
         {
@@ -51,6 +98,16 @@ namespace AppWeb.Controllers
                 Celda3.BackgroundColor = new BaseColor(130, 130, 130);
                 Celda3.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
                 Table.AddCell(Celda3);
+
+                List<MarcaCls> Lista = (List<MarcaCls>)Session["Lista"];
+
+                int nregistros = Lista.Count;
+                for (int i = 0; i < nregistros; i++)
+                {
+                    Table.AddCell(Lista[i].IidMarca.ToString());
+                    Table.AddCell(Lista[i].Nombre);
+                    Table.AddCell(Lista[i].Descripcion);
+                }
 
                 Doc.Add(Table);
                 Doc.Close();
