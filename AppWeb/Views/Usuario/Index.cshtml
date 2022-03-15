@@ -43,28 +43,23 @@
             @using (Ajax.BeginForm("Guardar", "Usuario", null, new AjaxOptions
             {
                 HttpMethod = "POST",
-                OnSuccess = "Guardar"
-                /*UpdateTargetId = "DivRol",
-                InsertionMode = InsertionMode.Replace*/
+                OnSuccess = "Guardar",
+                InsertionMode = InsertionMode.Replace,
+                UpdateTargetId = "divError"
             }))
             {
                 @Html.Hidden("Titulo")
                 @Html.Hidden("NombrePersona")
                 <div class="modal-body">
                     <div>
-                        @Html.Label("Id Usuario: ")
-                        @Html.TextBox("IdUsuario", null, new { @class = "form-control", @readonly = "true" })
-                    </div>
-                    <div>
                         @Html.Label("Nombre de Usuario: ")
                         @Html.TextBox("NombreUsuario", null, new { @class = "form-control" })
                     </div>
-                    <div>
+                    <div id="divContraOculto">
                         @Html.Label("Contraseña: ")
                         @Html.Password("Contra", null, new { @class = "form-control" })
                     </div>
-
-                    <div>
+                    <div id="divUsuarioOculto">
                         @Html.Label("Nombre Persona: ")
                         @Html.DropDownList("Id", ListaPersonas, new { @class = "form-control" })
                     </div>
@@ -80,6 +75,8 @@
                 </div>
             }
         </div>
+        <div id="divError">
+        </div>
     </div>
 </div>
 
@@ -91,7 +88,10 @@
     }
 
     function Agregar() {
-        document.getElementById("Titulo").value = "1";
+        Limpiar();
+        document.getElementById("Titulo").value = "-1";
+        document.getElementById("divContraOculto").style.display = "block";
+        document.getElementById("divUsuarioOculto").style.display = "block";
     }
 
     var Id = document.getElementById("Id");
@@ -105,6 +105,38 @@
             document.getElementById("BtnCerrar").click();
         } else {
             alert("Ocurrió un error!");
+        }
+    }
+
+    function Guardar(Respuesta) {
+        if (Respuesta == "0" || Respuesta == "1") {
+            $("FrmFiltrar").trigger("submit");
+            alert("Se ejecutó correctamente");
+            document.getElementById("BtnCerrar").click();
+        } else {
+            alert("Ocurrió un error");
+        }
+    }
+
+    function Editar(id) {
+        Limpiar();
+        $.get("Usuario/RecuperarInformacion/?IdUsuario=" + id, function (data) {
+            document.getElementById("NombreUsuario").value = data.NombreUsuario;
+            document.getElementById("IdRol").value = data.IdRol;
+        })
+
+        document.getElementById("Titulo").value = id;
+        document.getElementById("divContraOculto").style.display = "none";
+        document.getElementById("divUsuarioOculto").style.display = "none";
+    }
+
+    function Limpiar() {
+        var Controles = document.getElementsByClassName("form-control");
+        var Control;
+
+        for (var i = 0; i < Controles.length; i++) {
+            Control = Controles[i];
+            Control.value = "";
         }
     }
 

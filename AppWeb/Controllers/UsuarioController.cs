@@ -227,55 +227,95 @@ namespace AppWeb.Controllers
 
             }
 
-            return PartialView("_TablaUsuario",ListaUsuario);
+            return PartialView("_TablaUsuario", ListaUsuario);
         }
 
-        public int Guardar(UsuarioCls objUsuarioCls, int Titulo)
+        public string Guardar(UsuarioCls objUsuarioCls, int Titulo)
         {
-            int Respuesta = 0;
+            //Vacío es error
+            string Respuesta = "";
             try
             {
-                using (var Bd = new BDPasajeEntities())
+                if (!ModelState.IsValid)
                 {
-                    using (var Transaction = new TransactionScope())
+                    var query = (from state in ModelState.Values
+                                 from error in state.Errors
+                                 select error.ErrorMessage).ToList();
+                    Respuesta += "<ul class='list-group'>";
+                    foreach (var item in query)
                     {
-                        if (Titulo == 1)
+                        Respuesta += "<li class='list-group-item'>" + item + "</li>";
+                    }
+                    Respuesta += "</ul>";
+                }
+                else
+                {
+
+                    using (var Bd = new BDPasajeEntities())
+                    {
+                        using (var Transaction = new TransactionScope())
                         {
-                            Usuario objUsuario = new Usuario();
-                            objUsuario.NOMBREUSUARIO = objUsuarioCls.NombreUsuario;
-                            SHA256Managed sha = new SHA256Managed();
-                            byte[] byteContra = Encoding.Default.GetBytes(objUsuarioCls.Contra);
-                            byte[] byteContraCifrada = sha.ComputeHash(byteContra);
-                            string CadenaContraCifrada = BitConverter.ToString(byteContraCifrada).Replace("-", "");
-                            objUsuario.CONTRA = CadenaContraCifrada;
-                            //Obtiene posición de una cadena de caracteres, de izquierda a derecha posición y # de caracteres a obtener
-                            objUsuario.TIPOUSUARIO = objUsuarioCls.NombrePersona.Substring(objUsuarioCls.NombrePersona.Length - 2, 1);
-                            objUsuario.IID = objUsuarioCls.Id;
-                            objUsuario.IIDROL = objUsuarioCls.IdRol;
-                            objUsuario.bhabilitado = 1;
-                            Bd.Usuario.Add(objUsuario);
-                            if (objUsuario.TIPOUSUARIO == "C")
+                            if (Titulo == -1)
                             {
-                                Cliente objCliente = Bd.Cliente.Where(p => p.IIDCLIENTE.Equals(objUsuarioCls.Id)).First();
-                                objCliente.bTieneUsuario = 1;
+                                Usuario objUsuario = new Usuario();
+                                objUsuario.NOMBREUSUARIO = objUsuarioCls.NombreUsuario;
+                                SHA256Managed sha = new SHA256Managed();
+                                byte[] byteContra = Encoding.Default.GetBytes(objUsuarioCls.Contra);
+                                byte[] byteContraCifrada = sha.ComputeHash(byteContra);
+                                string CadenaContraCifrada = BitConverter.ToString(byteContraCifrada).Replace("-", "");
+                                objUsuario.CONTRA = CadenaContraCifrada;
+                                //Obtiene posición de una cadena de caracteres, de izquierda a derecha posición y # de caracteres a obtener
+                                objUsuario.TIPOUSUARIO = objUsuarioCls.NombrePersona.Substring(objUsuarioCls.NombrePersona.Length - 2, 1);
+                                objUsuario.IID = objUsuarioCls.Id;
+                                objUsuario.IIDROL = objUsuarioCls.IdRol;
+                                objUsuario.bhabilitado = 1;
+                                Bd.Usuario.Add(objUsuario);
+                                if (objUsuario.TIPOUSUARIO == "C")
+                                {
+                                    Cliente objCliente = Bd.Cliente.Where(p => p.IIDCLIENTE.Equals(objUsuarioCls.Id)).First();
+                                    objCliente.bTieneUsuario = 1;
+                                }
+                                else
+                                {
+                                    Empleado objEmpleado = Bd.Empleado.Where(p => p.IIDEMPLEADO.Equals(objUsuarioCls.Id)).First();
+                                    objEmpleado.bTieneUsuario = 1;
+                                }
+                                Respuesta = Bd.SaveChanges().ToString();
+                                if (Respuesta == "0")
+                                    Respuesta = "";
+                                Transaction.Complete();
                             }
                             else
                             {
-                                Empleado objEmpleado = Bd.Empleado.Where(p => p.IIDEMPLEADO.Equals(objUsuarioCls.Id)).First();
-                                objEmpleado.bTieneUsuario = 1;
+                                //Editar
+                                Usuario objUsuario = Bd.Usuario.Where(p => p.IIDUSUARIO == Titulo).First();
+                                objUsuario.IIDROL = objUsuarioCls.IdRol;
+                                objUsuario.NOMBREUSUARIO = objUsuarioCls.NombreUsuario;
+                                Respuesta = Bd.SaveChanges().ToString();
                             }
-
-                            Respuesta = Bd.SaveChanges();
-                            Transaction.Complete();
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Respuesta = 0;
+                Respuesta = "";
             }
             return Respuesta;
         }
+
+        public JsonResult RecuperarInformacion(int IdUsuario)
+        {
+            UsuarioCls objUsuarioCls = new UsuarioCls();
+            using (var Bd = new BDPasajeEntities())
+            {
+                Usuario objUsuario = Bd.Usuario.Where(p => p.IIDUSUARIO == IdUsuario).First();
+                objUsuarioCls.NombreUsuario = objUsuario.NOMBREUSUARIO;
+                //objUsuarioCls.NombrePersona = objUsuario.
+                objUsuarioCls.IdRol = (int)objUsuario.IIDROL;
+            }
+            return Json(objUsuarioCls, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

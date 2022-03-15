@@ -12,7 +12,8 @@
 <button type="button" onclick="Agregar()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
     Agregar
 </button>
-
+@Html.Label("Ingrese el nombre Rol: ")
+@Html.TextBox("NombreRol", null, new { @class = "form-control" })
 @using (Ajax.BeginForm("Filtro", "", new AjaxOptions
 {
     HttpMethod = "POST",
@@ -21,8 +22,7 @@
 }, new { @id = "FrmFiltro" }))
 
 {
-    @Html.Label("Ingrese el nombre Rol: ")
-    @Html.TextBox("NombreRol", null, new { @class = "form-control" })
+
     <div id="DivRol">
         @Html.Partial("_TablaRol", Model)
     </div>

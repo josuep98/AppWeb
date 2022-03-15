@@ -52,7 +52,9 @@ namespace AppWeb.Controllers
                 //Pendiente
                 for (int i = 0; i < nregistros; i++)
                 {
-
+                    ew.Cells[i + 2, 1].Value = Lista[i].IidMarca;
+                    ew.Cells[i + 2, 2].Value = Lista[i].Nombre;
+                    ew.Cells[i + 2, 3].Value = Lista[i].Descripcion;
                 }
                 //Pendiente
                 ep.SaveAs(ms);
