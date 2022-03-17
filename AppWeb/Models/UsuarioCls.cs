@@ -26,6 +26,7 @@ namespace AppWeb.Models
         public string NombreRol { get; set; }
 
         public string NombreTipoEmpleado { get; set; }
+        public string NombrePersonaEnviar { get; set; }
 
 
     }

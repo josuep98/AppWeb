@@ -49,7 +49,7 @@
             }))
             {
                 @Html.Hidden("Titulo")
-                @Html.Hidden("NombrePersona")
+                @Html.Hidden("NombrePersonaEnviar")
                 <div class="modal-body">
                     <div>
                         @Html.Label("Nombre de Usuario: ")
@@ -96,20 +96,11 @@
 
     var Id = document.getElementById("Id");
     Id.onchange = function () {
-        document.getElementById("NombrePersona").value = Id.options[Id.selectedIndex].text;
+        document.getElementById("NombrePersonaEnviar").value = Id.options[Id.selectedIndex].text;
     }
 
     function Guardar(Respuesta) {
-        if (Respuesta >= 1) {
-            alert("Se ejecutó correctamente!");
-            document.getElementById("BtnCerrar").click();
-        } else {
-            alert("Ocurrió un error!");
-        }
-    }
-
-    function Guardar(Respuesta) {
-        if (Respuesta == "0" || Respuesta == "1") {
+        if (Respuesta == "0" || Respuesta == "1" || Respuesta == "2") {
             $("FrmFiltrar").trigger("submit");
             alert("Se ejecutó correctamente");
             document.getElementById("BtnCerrar").click();
@@ -123,6 +114,9 @@
         $.get("Usuario/RecuperarInformacion/?IdUsuario=" + id, function (data) {
             document.getElementById("NombreUsuario").value = data.NombreUsuario;
             document.getElementById("IdRol").value = data.IdRol;
+
+            document.getElementById("Contra").value = "1";
+            document.getElementById("Id").value = "1";
         })
 
         document.getElementById("Titulo").value = id;
@@ -138,6 +132,7 @@
             Control = Controles[i];
             Control.value = "";
         }
+        document.getElementById("divError").innerHTML = "";
     }
 
 </script>

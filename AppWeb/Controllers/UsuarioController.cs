@@ -60,6 +60,7 @@ namespace AppWeb.Controllers
                                 Value = item.IIDROL.ToString()
                             }).ToList();
             }
+            ListaRol.Insert(0, new SelectListItem { Text = "--Seleccione--", Value = "" });
             ViewBag.ListaRol = ListaRol;
         }
 
@@ -265,7 +266,7 @@ namespace AppWeb.Controllers
                                 string CadenaContraCifrada = BitConverter.ToString(byteContraCifrada).Replace("-", "");
                                 objUsuario.CONTRA = CadenaContraCifrada;
                                 //Obtiene posición de una cadena de caracteres, de izquierda a derecha posición y # de caracteres a obtener
-                                objUsuario.TIPOUSUARIO = objUsuarioCls.NombrePersona.Substring(objUsuarioCls.NombrePersona.Length - 2, 1);
+                                objUsuario.TIPOUSUARIO = objUsuarioCls.NombrePersonaEnviar.Substring(objUsuarioCls.NombrePersonaEnviar.Length - 2, 1);
                                 objUsuario.IID = objUsuarioCls.Id;
                                 objUsuario.IIDROL = objUsuarioCls.IdRol;
                                 objUsuario.bhabilitado = 1;
