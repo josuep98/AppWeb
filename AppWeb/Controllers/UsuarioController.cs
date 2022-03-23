@@ -305,6 +305,26 @@ namespace AppWeb.Controllers
             return Respuesta;
         }
 
+        public int Eliminar(int idUsuario)
+        {
+            int Respuesta = 0;
+            try
+            {
+                using (BDPasajeEntities Bd = new BDPasajeEntities())
+                {
+                    Usuario objUsuario = Bd.Usuario.Where(p => p.IIDUSUARIO == idUsuario).First();
+                    objUsuario.bhabilitado = 0;
+                    Respuesta = Bd.SaveChanges();
+                }
+
+            }
+            catch (Exception)
+            {
+                Respuesta = 0;
+            }
+            return Respuesta;
+        }
+
         public JsonResult RecuperarInformacion(int IdUsuario)
         {
             UsuarioCls objUsuarioCls = new UsuarioCls();

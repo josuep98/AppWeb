@@ -85,22 +85,42 @@ namespace AppWeb.Controllers
                 {
                     using (var Bd = new BDPasajeEntities())
                     {
+                        int Cantidad = 0;
                         if (Titulo.Equals(-1))
                         {
-                            Rol objRol = new Rol();
-                            objRol.NOMBRE = objRolCls.Nombre;
-                            objRol.DESCRIPCION = objRolCls.Descripcion;
-                            objRol.BHABILITADO = 1;
-                            Bd.Rol.Add(objRol);
-                            Respuesta = Bd.SaveChanges().ToString();
-                            if (Respuesta == "0") Respuesta = "";
+                            //-1 ya existe en la Bd
+                            Cantidad = Bd.Rol.Where(p => p.NOMBRE == objRolCls.Nombre).Count();
+                            if (Cantidad >= 1)
+                            {
+                                Respuesta = "-1";
+                            }
+                            else
+                            {
+
+                                Rol objRol = new Rol();
+                                objRol.NOMBRE = objRolCls.Nombre;
+                                objRol.DESCRIPCION = objRolCls.Descripcion;
+                                objRol.BHABILITADO = 1;
+                                Bd.Rol.Add(objRol);
+                                Respuesta = Bd.SaveChanges().ToString();
+                                if (Respuesta == "0") Respuesta = "";
+                            }
                         }
                         else
                         {
-                            Rol objRol = Bd.Rol.Where(p => p.IIDROL == Titulo).First();
-                            objRol.NOMBRE = objRolCls.Nombre;
-                            objRol.DESCRIPCION = objRolCls.Descripcion;
-                            Respuesta = Bd.SaveChanges().ToString();
+                            Cantidad = Bd.Rol.Where(p => p.NOMBRE == objRolCls.Nombre &&
+                            p.IIDROL != Titulo).Count();
+                            if (Cantidad >= 1)
+                            {
+                                Respuesta = "-1";
+                            }
+                            else
+                            {
+                                Rol objRol = Bd.Rol.Where(p => p.IIDROL == Titulo).First();
+                                objRol.NOMBRE = objRolCls.Nombre;
+                                objRol.DESCRIPCION = objRolCls.Descripcion;
+                                Respuesta = Bd.SaveChanges().ToString();
+                            }
                         }
                     }
                 }

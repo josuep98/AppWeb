@@ -80,6 +80,23 @@
     </div>
 </div>
 
+<!-- Modal Eliminar -->
+<div class="modal fade" id="exampleModalConfirmacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">¿Desea eliminar los registros?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div style="padding:1em">
+                <button type="button" id="CerrarConfirmacion" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" onclick="EliminarRegistro()" class="btn btn-info">Aceptar</button>
+            </div>
+            <div id="test"></div>
+        </div>
+    </div>
+</div>
+
 <script>
 
     var NombrePersona = document.getElementById("NombrePersona");
@@ -134,5 +151,23 @@
         }
         document.getElementById("divError").innerHTML = "";
     }
+
+    function Eliminar(idUsuario) {
+        document.getElementById("Titulo").value = idUsuario;
+    }
+
+    function EliminarRegistro() {
+        var idUsuario = document.getElementById("Titulo").value;
+        //data retorna la respuesta del controller
+        $.get("Usuario/Eliminar/?idUsuario=" + idUsuario, function (data) {
+            if (data == 1) {
+                $('#FrmFiltrar').trigger("submit");
+                alert("Se ejecutó correctamente");
+                document.getElementById("CerrarConfirmacion").click();
+            }else
+                alert("Ocurrió un error")
+        })
+    }
+
 
 </script>
