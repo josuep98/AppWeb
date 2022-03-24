@@ -141,25 +141,37 @@ namespace AppWeb.Controllers
                 {
                     using (var Bd = new BDPasajeEntities())
                     {
+                        int Cantidad = 0;
                         //Agregar
                         if (Titulo == -1)
                         {
-                            RolPagina objRolPagina = new RolPagina();
-                            objRolPagina.IIDROL = objRolPaginaCls.IdRol;
-                            objRolPagina.IIDPAGINA = objRolPaginaCls.IdPagina;
-                            objRolPagina.BHABILITADO = 1;
-                            Bd.RolPagina.Add(objRolPagina);
-                            Respuesta = Bd.SaveChanges().ToString();
-                            if (Respuesta == "0") Respuesta = "";
-
-
+                            Cantidad = Bd.RolPagina.Where(p => p.IIDROL == objRolPaginaCls.IdRol && p.IIDPAGINA == objRolPaginaCls.IdPagina).Count();
+                            if (Cantidad >= 1)
+                                Respuesta = "-1";
+                            else
+                            {
+                                RolPagina objRolPagina = new RolPagina();
+                                objRolPagina.IIDROL = objRolPaginaCls.IdRol;
+                                objRolPagina.IIDPAGINA = objRolPaginaCls.IdPagina;
+                                objRolPagina.BHABILITADO = 1;
+                                Bd.RolPagina.Add(objRolPagina);
+                                Respuesta = Bd.SaveChanges().ToString();
+                                if (Respuesta == "0") Respuesta = "";
+                            }
                         }
                         else
                         {
-                            RolPagina objRolPagina = Bd.RolPagina.Where(p => p.IIDROLPAGINA == Titulo).First();
-                            objRolPagina.IIDROL = objRolPaginaCls.IdRol;
-                            objRolPagina.IIDPAGINA = objRolPaginaCls.IdPagina;
-                            Bd.SaveChanges().ToString();
+                            Cantidad = Bd.RolPagina.Where(p => p.IIDROL == objRolPaginaCls.IdRol && p.IIDPAGINA == objRolPaginaCls.IdPagina
+                            && p.IIDROLPAGINA != Titulo).Count();
+                            if (Cantidad >= 1)
+                                Respuesta = "-1";
+                            else
+                            {
+                                RolPagina objRolPagina = Bd.RolPagina.Where(p => p.IIDROLPAGINA == Titulo).First();
+                                objRolPagina.IIDROL = objRolPaginaCls.IdRol;
+                                objRolPagina.IIDPAGINA = objRolPaginaCls.IdPagina;
+                                Bd.SaveChanges().ToString();
+                            }
                         }
                     }
 

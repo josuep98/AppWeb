@@ -110,28 +110,39 @@ namespace AppWeb.Controllers
                 {
                     using (var Bd = new BDPasajeEntities())
                     {
+                        int Cantidad = 0;
                         //Agregar
                         if (Titulo == -1)
                         {
-                            Pagina objPagina = new Pagina();
-                            objPagina.MENSAJE = objPaginaCls.Mensaje;
-                            objPagina.ACCION = objPaginaCls.Accion;
-                            objPagina.CONTROLADOR = objPaginaCls.Controlador;
-                            objPagina.BHABILITADO = 1;
-                            Bd.Pagina.Add(objPagina);
-                            Respuesta = Bd.SaveChanges().ToString();
-                            if (Respuesta == "0") Respuesta = "";
+                            Cantidad = Bd.Pagina.Where(p => p.MENSAJE == objPaginaCls.Mensaje).Count();
+                            if (Cantidad >= 1)
+                                Respuesta = "-1";
+                            else
+                            {
+                                Pagina objPagina = new Pagina();
+                                objPagina.MENSAJE = objPaginaCls.Mensaje;
+                                objPagina.ACCION = objPaginaCls.Accion;
+                                objPagina.CONTROLADOR = objPaginaCls.Controlador;
+                                objPagina.BHABILITADO = 1;
+                                Bd.Pagina.Add(objPagina);
+                                Respuesta = Bd.SaveChanges().ToString();
+                                if (Respuesta == "0") Respuesta = "";
+                            }
                         }
                         else
                         //Editar
                         {
-                            Pagina objPagina = Bd.Pagina.Where(p => p.IIDPAGINA == Titulo).First();
-
-                            objPagina.MENSAJE = objPaginaCls.Mensaje;
-                            objPagina.CONTROLADOR = objPaginaCls.Controlador;
-                            objPagina.ACCION = objPaginaCls.Accion;
-                            Respuesta = Bd.SaveChanges().ToString();
-
+                            Cantidad = Bd.Pagina.Where(p => p.MENSAJE == objPaginaCls.Mensaje && p.IIDPAGINA != Titulo).Count();
+                            if (Cantidad >= 1)
+                                Respuesta = "-1";
+                            else
+                            {
+                                Pagina objPagina = Bd.Pagina.Where(p => p.IIDPAGINA == Titulo).First();
+                                objPagina.MENSAJE = objPaginaCls.Mensaje;
+                                objPagina.CONTROLADOR = objPaginaCls.Controlador;
+                                objPagina.ACCION = objPaginaCls.Accion;
+                                Respuesta = Bd.SaveChanges().ToString();
+                            }
                         }
                     }
                 }

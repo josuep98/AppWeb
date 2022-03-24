@@ -243,6 +243,7 @@
     <Compile Include="Controllers\BusController.cs" />
     <Compile Include="Controllers\ClienteController.cs" />
     <Compile Include="Controllers\EmpleadoController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MarcaController.cs" />
     <Compile Include="Controllers\PaginaController.cs" />
     <Compile Include="Controllers\RolController.cs" />
@@ -383,6 +384,7 @@
     <Content Include="Views\Usuario\Index.cshtml" />
     <Content Include="Views\Usuario\_TablaUsuario.cshtml" />
     <Content Include="Views\Viaje\_TablaViaje.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

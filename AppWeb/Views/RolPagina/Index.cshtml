@@ -99,7 +99,11 @@
             alert("Se agregó correctamente");
             document.getElementById("BtnCerrar").click();
         } else {
-            alert("Ocurrió un error");
+            if (Respuesta == "-1") {
+                alert("Ya existe en la base de datos");
+                document.getElementById("DivRolError").innerHTML = "";
+            } else
+                alert("Ocurrió un error");
         }
     }
 

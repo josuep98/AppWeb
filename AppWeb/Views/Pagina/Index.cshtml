@@ -114,7 +114,11 @@
             document.getElementById("BtnCerrar").click();
             alert("Se guardo correctamente");
         } else {
-            alert("No se pudo guardar")
+            if (Resultado == "-1") {
+                alert("Ya existe en la base de datos");
+                document.getElementById("DivError").innerHTML = "";
+            } else
+                alert("No se pudo guardar")
         }
     }
 
