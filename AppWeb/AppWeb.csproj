@@ -252,6 +252,7 @@
     <Compile Include="Controllers\TipoUsuarioController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Controllers\ViajeController.cs" />
+    <Compile Include="Filters\Acceder.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -295,6 +296,7 @@
       <DependentUpon>BDPasaje.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MarcaCls.cs" />
+    <Compile Include="Models\MenuCls.cs" />
     <Compile Include="Models\Modelo.cs">
       <DependentUpon>BDPasaje.tt</DependentUpon>
     </Compile>

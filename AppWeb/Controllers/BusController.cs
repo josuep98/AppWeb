@@ -4,13 +4,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AppWeb.Models;
+using AppWeb.Filters;
 
 namespace AppWeb.Controllers
 {
     public class BusController : Controller
     {
+        [Acceder]
         // GET: Bus
-
         public void ListarComboSucursal()
         {
             //Agregar

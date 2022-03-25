@@ -4,11 +4,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AppWeb.Models;
+using AppWeb.Filters;
 
 namespace AppWeb.Controllers
 {
     public class RolController : Controller
     {
+        [Acceder]
         // GET: Rol
         public ActionResult Index()
         {

@@ -4,11 +4,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AppWeb.Models;
+using AppWeb.Filters;
 
 namespace AppWeb.Controllers
 {
     public class ClienteController : Controller
     {
+        [Acceder]
         // GET: Cliente
         public ActionResult Index(ClienteCls objClienteCls)
         {

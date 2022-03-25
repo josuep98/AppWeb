@@ -48,6 +48,30 @@ namespace AppWeb.Controllers
                     Mensaje = NumeroVeces.ToString();
                     if (Mensaje == "0")
                         Mensaje = "Usuario o contraseña incorrecta";
+                    else
+                    {
+
+                        //Objeto usuario
+                        Usuario objUsuario = Bd.Usuario.Where(p => p.NOMBREUSUARIO == NombreUsuario && p.CONTRA == CadenaContraCifrada).First();
+                        Session["Usuario"] = objUsuario;
+                        List<MenuCls> ListaMenu = (from Usuario in Bd.Usuario
+                                                   join Rol in Bd.Rol
+                                                   on Usuario.IIDROL equals Rol.IIDROL
+                                                   join RolPagina in Bd.RolPagina
+                                                   on Rol.IIDROL equals RolPagina.IIDROL
+                                                   join Pagina in Bd.Pagina
+                                                   on RolPagina.IIDPAGINA equals Pagina.IIDPAGINA
+                                                   where Rol.IIDROL == objUsuario.IIDROL && RolPagina.IIDROL == objUsuario.IIDROL &&
+                                                   Usuario.IIDUSUARIO == objUsuario.IIDUSUARIO
+                                                   select new MenuCls
+                                                   {
+                                                       NombreAccion = Pagina.ACCION,
+                                                       NombreController = Pagina.CONTROLADOR,
+                                                       Mensaje = Pagina.MENSAJE
+                                                   }).ToList();
+                        Session["Rol"] = ListaMenu;
+
+                    }
                 }
             }
 

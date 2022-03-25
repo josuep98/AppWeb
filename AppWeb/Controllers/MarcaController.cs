@@ -10,9 +10,11 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using AppWeb.Filters;
 
 namespace AppWeb.Controllers
 {
+    [Acceder]
     //Entity framework solo se utiliza en el controlador, aqui hacemos nuestra interacción con nuestro mapeo
     public class MarcaController : Controller
     {
