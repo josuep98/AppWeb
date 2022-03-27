@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using AppWeb.Models;
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -17,17 +19,22 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <img src="@Url.Content("~/Content/200-logo-cooperativa.png")" width="45px" height="45px" alt="imgf" />
                 </button>
-                @Html.ActionLink("Marca", "Index", "Marca", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Sucursal", "Index", "Sucursal", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Cliente", "Index", "Cliente", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Empleado", "Index", "Empleado", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Bus", "Index", "Bus", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Viaje", "Index", "Viaje", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Tipo Usuario", "Index", "TipoUsuario", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Rol", "Index", "Rol", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Página", "Index", "Pagina", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Usuario", "Index", "Usuario", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Rol Página", "Index", "RolPagina", new { area = "" }, new { @class = "navbar-brand" })
+                @*@Html.ActionLink("Marca", "Index", "Marca", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Sucursal", "Index", "Sucursal", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Cliente", "Index", "Cliente", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Empleado", "Index", "Empleado", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Bus", "Index", "Bus", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Viaje", "Index", "Viaje", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Tipo Usuario", "Index", "TipoUsuario", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Rol", "Index", "Rol", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Página", "Index", "Pagina", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Usuario", "Index", "Usuario", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Rol Página", "Index", "RolPagina", new { area = "" }, new { @class = "navbar-brand" })*@
+                @foreach (MenuCls menuCls in (List<MenuCls>)Session["Rol"])
+                {
+                    @Html.ActionLink(menuCls.Mensaje, menuCls.NombreAccion, menuCls.NombreController, new { area = "" }, new { @class = "navbar-brand" })
+                }
+                @Html.ActionLink("Cerrar Sesión", "CerrarSesion", "Login", new { area = "" }, new { @class = "navbar-brand" })
 
             </div>
             <div class="navbar-collapse collapse">

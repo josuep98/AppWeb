@@ -17,7 +17,8 @@
 {
     HttpMethod = "POST",
     UpdateTargetId = "DivIdRolPagina",
-    InsertionMode = InsertionMode.Replace
+    InsertionMode = InsertionMode.Replace,
+    OnSuccess = "Filtrar"
 }, new { @id = "FrmFiltrado" }))
 {
     @Html.DropDownList("IdRolDdl", ListaRol, new { @class = "form-control" })
@@ -83,7 +84,7 @@
 </div>
 
 <script>
-    var IdRol = document.getElementById("IdRol");
+    var IdRol = document.getElementById("IdRolDdl");
     IdRol.onchange = function () {
         $("#FrmFiltrado").trigger("submit");
     }

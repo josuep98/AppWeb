@@ -97,7 +97,8 @@
 <script>
     function Ingresar(Respuesta) {
         if (Respuesta == "1") {
-            document.location.href = "@Url.Action("Index", "Marca")";
+            document.location.href = "@Url.Action("Index", "PantallaPrincipal")";
+            document.getElementById("divRespuesta").innerHTML = "";
         } else {
             alert("Usuario o contraseña incorrectos")
         }

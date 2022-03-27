@@ -246,6 +246,7 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MarcaController.cs" />
     <Compile Include="Controllers\PaginaController.cs" />
+    <Compile Include="Controllers\PantallaPrincipalController.cs" />
     <Compile Include="Controllers\RolController.cs" />
     <Compile Include="Controllers\RolPaginaController.cs" />
     <Compile Include="Controllers\SucursalController.cs" />
@@ -387,6 +388,7 @@
     <Content Include="Views\Usuario\_TablaUsuario.cshtml" />
     <Content Include="Views\Viaje\_TablaViaje.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\PantallaPrincipal\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -8,7 +8,7 @@ using AppWeb.Filters;
 
 namespace AppWeb.Controllers
 {
-    [Acceder]
+    //[Acceder]
     public class EmpleadoController : Controller
     {
         // GET: Empleado

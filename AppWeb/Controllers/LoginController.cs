@@ -17,6 +17,13 @@ namespace AppWeb.Controllers
             return View();
         }
 
+        public ActionResult CerrarSesion()
+        {
+            Session["Usuario"] = null;
+            Session["Rol"] = null;
+            return RedirectToAction("Index");
+        }
+
         public string Login(UsuarioCls usuarioCls)
         {
             string Mensaje = "";
@@ -50,10 +57,20 @@ namespace AppWeb.Controllers
                         Mensaje = "Usuario o contraseña incorrecta";
                     else
                     {
-
                         //Objeto usuario
                         Usuario objUsuario = Bd.Usuario.Where(p => p.NOMBREUSUARIO == NombreUsuario && p.CONTRA == CadenaContraCifrada).First();
                         Session["Usuario"] = objUsuario;
+                        if (objUsuario.TIPOUSUARIO == "C")
+                        {
+                            Cliente objCliente = Bd.Cliente.Where(p => p.IIDCLIENTE == objUsuario.IID).First();
+                            //Utilizar un modelo en lugar de session
+                            Session["NombreCompleto"] = objCliente.NOMBRE + " " + objCliente.APPATERNO + " " + objCliente.APMATERNO;
+                        }
+                        else
+                        {
+                            Empleado objEmpleado = Bd.Empleado.Where(p => p.IIDEMPLEADO == objUsuario.IID).First();
+                            Session["NombreCompleto"] = objEmpleado.NOMBRE + " " + objEmpleado.APPATERNO + " " + objEmpleado.APMATERNO;
+                        }
                         List<MenuCls> ListaMenu = (from Usuario in Bd.Usuario
                                                    join Rol in Bd.Rol
                                                    on Usuario.IIDROL equals Rol.IIDROL
@@ -70,7 +87,6 @@ namespace AppWeb.Controllers
                                                        Mensaje = Pagina.MENSAJE
                                                    }).ToList();
                         Session["Rol"] = ListaMenu;
-
                     }
                 }
             }
