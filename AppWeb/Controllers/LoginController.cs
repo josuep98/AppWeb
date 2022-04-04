@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using AppWeb.ClasesAuxiliares;
 using AppWeb.Models;
 
 namespace AppWeb.Controllers
@@ -90,7 +91,49 @@ namespace AppWeb.Controllers
                     }
                 }
             }
-
+            return Mensaje;
+        }
+        public string RecuperarContra(string IdTipo, string Correo, string TelCelular)
+        {
+            string Mensaje = "";
+            using (var Bd = new BDPasajeEntities())
+            {
+                int Cantidad = 0;
+                int IdCliente = 0;
+                if (IdTipo == "C")
+                {
+                    //Si existe un cliente con está información
+                    Cantidad = Bd.Cliente.Where(p => p.EMAIL == Correo && p.TELEFONOCELULAR == TelCelular).Count();
+                }
+                if (Cantidad == 0)
+                    Mensaje = "No existe una persona registrada con esa información!";
+                else
+                {
+                    IdCliente = Bd.Cliente.Where(p => p.EMAIL == Correo && p.TELEFONOCELULAR == TelCelular).First().IIDCLIENTE;
+                    //Verificar si existe el usuario
+                    int Nveces = Bd.Usuario.Where(p => p.IID == IdCliente && p.TIPOUSUARIO == "C").Count();
+                    if (Nveces == 0)
+                        Mensaje = "No tiene usuario";
+                    else
+                    {
+                        Usuario objUsuario = Bd.Usuario.Where(p => p.IID == IdCliente && p.TIPOUSUARIO == "C").First();
+                        Random Ra = new Random();
+                        int N1 = Ra.Next(0, 9);
+                        int N2 = Ra.Next(0, 9);
+                        int N3 = Ra.Next(0, 9);
+                        int N4 = Ra.Next(0, 9);
+                        string NuevaContra = (N1 + N2 + N3 + N4).ToString();
+                        //Cifrando nueva clave
+                        SHA256Managed sha = new SHA256Managed();
+                        byte[] byteContra = Encoding.Default.GetBytes(NuevaContra);
+                        byte[] byteContraCifrada = sha.ComputeHash(byteContra);
+                        string CadenaContraCifrada = BitConverter.ToString(byteContraCifrada).Replace("-", "");
+                        objUsuario.CONTRA = CadenaContraCifrada;
+                        Mensaje = Bd.SaveChanges().ToString();
+                        CorreoCls.EnviarCorreo(Correo, "Recuperar Clave", "Se reseteo su clave, ahora su clave es: " + NuevaContra);
+                    }
+                }
+            }
             return Mensaje;
         }
 

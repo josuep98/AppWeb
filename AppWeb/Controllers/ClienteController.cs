@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using AppWeb.Models;
 using AppWeb.Filters;
+using AppWeb.ClasesAuxiliares;
 
 namespace AppWeb.Controllers
 {
@@ -104,9 +105,13 @@ namespace AppWeb.Controllers
                 objCliente.TELEFONOCELULAR = objClienteCls.Celular;
                 objCliente.BHABILITADO = 1;
 
-                Bd.Cliente.Add(objCliente);
-                Bd.SaveChanges();
 
+                var obj = CorreoCls.EnviarCorreo(objClienteCls.Email, "Testito", "Prueba please :v");
+                if (obj == 1)
+                {
+                    Bd.Cliente.Add(objCliente);
+                    Bd.SaveChanges();
+                }
             }
             return RedirectToAction("Index");
         }
