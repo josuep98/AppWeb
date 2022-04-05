@@ -226,7 +226,7 @@ namespace AppWeb.Controllers
                 objviajeCls.Precio = (decimal)objViaje.PRECIO;
                 //año-mes-día(pide)
                 //bdd (dd-mm-yyyy)
-                objviajeCls.FechaViajeCadena = ((DateTime)objViaje.FECHAVIAJE).ToString("yyyy-MM-dd");
+                objviajeCls.FechaViajeCadena = objViaje.FECHAVIAJE != null ? ((DateTime)objViaje.FECHAVIAJE).ToString("yyyy-MM-ddTHH:mm") : "";
                 objviajeCls.Numero = (int)objViaje.NUMEROASIENTOSDISPONIBLES;
                 objviajeCls.NombreFoto = objViaje.nombrefoto;
 
