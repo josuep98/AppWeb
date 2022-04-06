@@ -436,6 +436,7 @@
     <Content Include="Views\Viaje\_TablaViaje.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\PantallaPrincipal\Index.cshtml" />
+    <Content Include="Views\Reserva\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -446,7 +447,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Archivos\" />
-    <Folder Include="Views\Reserva\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

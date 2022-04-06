@@ -16,6 +16,8 @@ namespace AppWeb.Models
         public DateTime FechaViaje { get; set; }
         public string NombreBus { get; set; }
         public string DescripcionBus { get; set; }
+        //Podemos realizar la resta de asientos y validar aquí que número de asientos disponibles 
+        //sea menor al total de asientos mediante el get
         public int NumAsientosDis { get; set; }
         public int TotalAsientos { get; set; }
 

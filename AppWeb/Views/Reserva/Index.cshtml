@@ -1,0 +1,88 @@
+﻿@using AppWeb.Models;
+@model List<ReservaCls>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<style>
+    .agregado {
+        background-color: #01230e;
+        position: relative;
+        color: white !important;
+        font-weight: bold;
+    }
+
+        .agregado::after {
+            position: absolute;
+            content: "Reservado";
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background-color: green;
+            font-size: 2em;
+            color: white;
+            text-align: center;
+        }
+</style>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr; grid-gap:1em; grid-auto-rows:600px; margin-top:1em" id="divReserva">
+    @foreach (var Reserva in Model)
+    {
+        <div id="@Reserva.IdViaje" style="border: 1px solid #666; border-radius:1px;padding:2px">
+            @{
+                string BaseFoto = Convert.ToBase64String(Reserva.Foto);
+                //.jpg
+                string ExArchivo = Path.GetExtension(Reserva.NombreArchivo).Substring(1);
+                string Cadena = "data:image/" + ExArchivo + ";base64," + BaseFoto;
+            }
+            <img src="@Cadena" style="width:100%; height:auto" />
+            <div style="padding:1em;display:flex; justify-content:space-around">
+                <label> Origen: @Reserva.LugarOrigen</label>
+                <label> Destino: @Reserva.LugarDestino</label>
+            </div>
+            <div style="padding:1em">
+                <p>Placa Bus: @Reserva.NombreBus (@Reserva.DescripcionBus)</p>
+                <p>Fecha Viaje: @Reserva.FechaViaje</p>
+                <p style="font-weight:bold">Precio: $@Reserva.Precio</p>
+                <p>Disponible: @Reserva.NumAsientosDis / @Reserva.TotalAsientos</p>
+                Solicitar: <input id="txt_@Reserva.IdViaje" type="number" min="0" max="@Reserva.NumAsientosDis" />
+                <div style="margin-top: 1em; text-align:center">
+                    <button class="btn btn-primary" onclick="Reservar(@Reserva.IdViaje, @Reserva.NumAsientosDis)">Aceptar</button>
+                    <button class="btn btn-danger">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    function Reservar(IdViaje, NumAsientosDis) {
+        //Número de pasajes
+        var numeroPasajes = document.getElementById("txt_" + IdViaje).value;
+        if (numeroPasajes <= 0) {
+            alert("Tiene que ser una cantidad mayor a 0");
+            return;
+        }
+        if (numeroPasajes == "") {
+            alert("No puede dejar el campo vacío");
+            return;
+        }
+        if (numeroPasajes > NumAsientosDis) {
+            alert("No puede solicitar más asientos de los disponibles que es: " + NumAsientosDis);
+            return;
+        }
+        //Aquí se confirma
+        if (confirm("Realmente desea reservar?") == 1) {
+            if (document.getElementById(IdViaje).classList.contains("agregado"))
+                alert("La reserva ya se agregó");
+            else {
+                document.getElementById(IdViaje).classList.add("agregado");
+                document.getElementById("txt_" + IdViaje).readOnly = true;
+            }
+        }
+    }
+</script>
