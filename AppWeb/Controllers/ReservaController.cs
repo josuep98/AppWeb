@@ -13,6 +13,16 @@ namespace AppWeb.Controllers
         public ActionResult Index()
         {
             ListarComboLugar();
+
+            var PasajesId = ControllerContext.HttpContext.Request.Cookies["PasajesId"];
+            var PasajesCantidad = ControllerContext.HttpContext.Request.Cookies["PasajesCantidad"];
+
+            if (PasajesId != null)
+            {
+                ViewBag.ListaId = PasajesId.Value;
+                ViewBag.ListaCantidad = PasajesCantidad.Value;
+            }
+
             using (var Bd = new BDPasajeEntities())
             {
                 var Reserva = (from Viaje in Bd.Viaje
@@ -35,7 +45,8 @@ namespace AppWeb.Controllers
                                    NombreBus = Bus.PLACA,
                                    DescripcionBus = Bus.DESCRIPCION,
                                    TotalAsientos = (int)(Bus.NUMEROCOLUMNAS * Bus.NUMEROFILAS),
-                                   NumAsientosDis = (int)Viaje.NUMEROASIENTOSDISPONIBLES
+                                   NumAsientosDis = (int)Viaje.NUMEROASIENTOSDISPONIBLES,
+                                   IdBus = Bus.IIDBUS
                                }).ToList();
                 return View(Reserva);
             }
@@ -58,6 +69,45 @@ namespace AppWeb.Controllers
                 //Pasa información del controller a mi lista
                 ViewBag.ListaLugar = Lista;
             }
+        }
+        public string AgregarCookie(string IdViaje, string Cantidad, string FechaViaje, string LugarOrigen, string LugarDestino, string Precio, int IdBus)
+        {
+            string respuesta = "";
+
+            try
+            {
+                var PasajesId = ControllerContext.HttpContext.Request.Cookies["PasajesId"];
+                var PasajesCantidad = ControllerContext.HttpContext.Request.Cookies["PasajesCantidad"];
+                if (PasajesId != null && PasajesCantidad != null && PasajesCantidad.Value != "" && PasajesId.Value != "")
+                {
+                    //Se crea por segunda vez
+                    string IdCookie = PasajesId.Value + "{" + IdViaje;
+                    string CantidadCookie = PasajesCantidad.Value + "{" + Cantidad + "*" + FechaViaje + "*" + LugarOrigen + "*" + LugarDestino + "*" +
+                        Precio + "*" + IdBus;
+
+                    HttpCookie cookieId = new HttpCookie("PasajesId", IdCookie);
+                    HttpCookie cookieCantidad = new HttpCookie("PasajesCantidad", CantidadCookie);
+
+                    ControllerContext.HttpContext.Response.SetCookie(cookieId);
+                    ControllerContext.HttpContext.Response.SetCookie(cookieCantidad);
+                }
+                else
+                {
+                    //Se crea por primera vez
+                    string formatoCadena = Cantidad + "*" + FechaViaje + "*" + LugarOrigen + "*" + LugarDestino + "*" + Precio + "*" + IdBus;
+                    HttpCookie cookieId = new HttpCookie("PasajesId", IdViaje);
+                    HttpCookie cookieCantidad = new HttpCookie("PasajesCantidad", formatoCadena);
+
+                    ControllerContext.HttpContext.Response.SetCookie(cookieId);
+                    ControllerContext.HttpContext.Response.SetCookie(cookieCantidad);
+                }
+                respuesta = "OK";
+            }
+            catch (Exception)
+            {
+                respuesta = "";
+            }
+            return respuesta;
         }
     }
 }

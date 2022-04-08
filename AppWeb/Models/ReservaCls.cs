@@ -20,6 +20,7 @@ namespace AppWeb.Models
         //sea menor al total de asientos mediante el get
         public int NumAsientosDis { get; set; }
         public int TotalAsientos { get; set; }
+        public int IdBus { get; set; }
 
     }
 }

@@ -3,6 +3,16 @@
 
 @{
     ViewBag.Title = "Index";
+    string[] arrayId = { };
+    string[] arrayCantidad = { };
+
+    if (ViewBag.ListaId != null && ViewBag.ListaCantidad != null)
+    {
+        //7,4,5
+        //.Split(',') [7,4,5]
+        arrayId = ((string)ViewBag.ListaId).Split('{');
+        arrayCantidad = ((string)ViewBag.ListaCantidad).Split('{');
+    }
 }
 
 <h2>Index</h2>
@@ -32,7 +42,9 @@
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr; grid-gap:1em; grid-auto-rows:600px; margin-top:1em" id="divReserva">
     @foreach (var Reserva in Model)
     {
-        <div id="@Reserva.IdViaje" style="border: 1px solid #666; border-radius:1px;padding:2px">
+        <div id="@Reserva.IdViaje" style="border: 1px solid #666; border-radius:1px;padding:2px"
+             @{ string clase; bool readOnly = false; if (arrayId.Contains(Reserva.IdViaje.ToString())) { clase = "agregado"; readOnly = true; } else { clase = "sinagregado"; readOnly = false; } }
+             class="@clase">
             @{
                 string BaseFoto = Convert.ToBase64String(Reserva.Foto);
                 //.jpg
@@ -51,8 +63,11 @@
                 <p>Disponible: @Reserva.NumAsientosDis / @Reserva.TotalAsientos</p>
                 Solicitar: <input id="txt_@Reserva.IdViaje" type="number" min="0" max="@Reserva.NumAsientosDis" />
                 <div style="margin-top: 1em; text-align:center">
-                    <button class="btn btn-primary" onclick="Reservar(@Reserva.IdViaje, @Reserva.NumAsientosDis)">Aceptar</button>
-                    <button class="btn btn-danger">Cancelar</button>
+                    <button class="btn btn-primary" onclick="Reservar(@Reserva.IdViaje, @Reserva.NumAsientosDis, '@Reserva.FechaViaje', '@Reserva.LugarOrigen',
+                    '@Reserva.LugarDestino', @Reserva.Precio, @Reserva.IdBus)">
+                        Aceptar
+                    </button>
+                    <button class="btn btn-danger" onclick="Quitar(@Reserva.IdViaje)">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -60,7 +75,7 @@
 </div>
 
 <script>
-    function Reservar(IdViaje, NumAsientosDis) {
+    function Reservar(IdViaje, NumAsientosDis, FechaViaje, LugarOrigen, LugarDestino, Precio, IdBus) {
         //Número de pasajes
         var numeroPasajes = document.getElementById("txt_" + IdViaje).value;
         if (numeroPasajes <= 0) {
@@ -82,7 +97,25 @@
             else {
                 document.getElementById(IdViaje).classList.add("agregado");
                 document.getElementById("txt_" + IdViaje).readOnly = true;
+                var url = "Reserva/AgregarCookie/?IdViaje=" + IdViaje + "&Cantidad=" + numeroPasajes + "&FechaViaje=" + FechaViaje +
+                    "&LugarOrigen=" + LugarOrigen + "&LugarDestino=" + LugarDestino + "&Precio=" + Precio + "&IdBus=" + IdBus
+
+                $.get(url, function (data) {
+                    if (data == "OK")
+                        alert("Se agregó correctamente");
+                    else
+                        alert("Ocurrió un error")
+                })
             }
         }
     }
+
+    function Quitar(IdViaje) {
+        if (confirm("Desea realmente cancelar la reserva de ese viaje?") == 1) {
+            document.getElementById(IdViaje).classList.remove("agregado");
+            document.getElementById("txt_" + IdViaje).value = "";
+            document.getElementById("txt_" + IdViaje).readOnly = false;
+        }
+    }
+
 </script>
