@@ -109,5 +109,53 @@ namespace AppWeb.Controllers
             }
             return respuesta;
         }
+
+        public string QuitarCookie(string IdViaje)
+        {
+            string Respuesta = "";
+            try
+            {
+                var PasajesId = ControllerContext.HttpContext.Request.Cookies["PasajesId"];
+                var PasajesCantidad = ControllerContext.HttpContext.Request.Cookies["PasajesCantidad"];
+                string valorId = PasajesId.Value;
+                string valorCantidad = PasajesCantidad.Value;
+                string[] arrayId = valorId.Split('{');
+                int IndiceId = Array.IndexOf(arrayId, IdViaje);
+                //6{7{9{2 - Ejemplo - Replace (cadena, '')
+                string nuevoId = "";
+                if (valorId.Contains("{" + IdViaje))
+                {
+                    nuevoId = valorId.Replace("{" + IdViaje, "");
+                }
+                else if (valorId.Contains(IdViaje + "{"))
+                {
+                    nuevoId = valorId.Replace(IdViaje + "{", "");
+                }
+                else
+                {
+                    nuevoId = valorId.Replace(IdViaje, "");
+                }
+
+                List<string> valor = valorCantidad.Split('{').ToList();
+                valor.RemoveAt(IndiceId);
+                string[] arrayCantidad = valor.ToArray();
+                string nuevaCantidad = String.Join("{", arrayCantidad);
+
+                HttpCookie cookieId = new HttpCookie("PasajesId", nuevoId);
+                HttpCookie cookieCantidad = new HttpCookie("PasajesCantidad", nuevaCantidad);
+
+                ControllerContext.HttpContext.Response.SetCookie(cookieId);
+                ControllerContext.HttpContext.Response.SetCookie(cookieCantidad);
+
+                Respuesta = "OK";
+
+            }
+            catch (Exception ex)
+            {
+                Respuesta = "";
+            }
+            return Respuesta;
+        }
+
     }
 }

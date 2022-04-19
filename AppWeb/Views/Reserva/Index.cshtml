@@ -43,7 +43,7 @@
     @foreach (var Reserva in Model)
     {
         <div id="@Reserva.IdViaje" style="border: 1px solid #666; border-radius:1px;padding:2px"
-             @{ string clase; bool readOnly = false; if (arrayId.Contains(Reserva.IdViaje.ToString())) { clase = "agregado"; readOnly = true; } else { clase = "sinagregado"; readOnly = false; } }
+             @{ string clase; bool readOnly = false; string valor = ""; if (arrayId.Contains(Reserva.IdViaje.ToString())) { clase = "agregado"; readOnly = true; int indice = Array.IndexOf(arrayId, Reserva.IdViaje.ToString()); valor = arrayCantidad[indice].Split('*')[0]; } else { clase = "sinagregado"; readOnly = false; valor = ""; } }
              class="@clase">
             @{
                 string BaseFoto = Convert.ToBase64String(Reserva.Foto);
@@ -61,7 +61,7 @@
                 <p>Fecha Viaje: @Reserva.FechaViaje</p>
                 <p style="font-weight:bold">Precio: $@Reserva.Precio</p>
                 <p>Disponible: @Reserva.NumAsientosDis / @Reserva.TotalAsientos</p>
-                Solicitar: <input id="txt_@Reserva.IdViaje" type="number" min="0" max="@Reserva.NumAsientosDis" />
+                Solicitar: <input value="@valor" readonly="@readOnly" id="txt_@Reserva.IdViaje" type="number" min="0" max="@Reserva.NumAsientosDis" />
                 <div style="margin-top: 1em; text-align:center">
                     <button class="btn btn-primary" onclick="Reservar(@Reserva.IdViaje, @Reserva.NumAsientosDis, '@Reserva.FechaViaje', '@Reserva.LugarOrigen',
                     '@Reserva.LugarDestino', @Reserva.Precio, @Reserva.IdBus)">
@@ -115,7 +115,18 @@
             document.getElementById(IdViaje).classList.remove("agregado");
             document.getElementById("txt_" + IdViaje).value = "";
             document.getElementById("txt_" + IdViaje).readOnly = false;
+            var url = "Reserva/QuitarCookie/?IdViaje=" + IdViaje;
+            //obtiene la respuesta del controller
+            $.get(url, function (data) {
+                if (data == "OK") {
+                    alert("Se eliminó correctamente");
+                } else {
+                    alert("Ocurrió un error");
+                }
+            })
         }
+
     }
+
 
 </script>
