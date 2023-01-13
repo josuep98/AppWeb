@@ -1,0 +1,6 @@
+System.Net.Mail.SmtpException: Error de sintaxis, comando no reconocido. La respuesta del servidor fue: 4.3.2 Concurrent connections limit exceeded. Visit https://aka.ms/concurrent_sending for more information. [Hostname=SA2PR10MB4667.namprd10.prod.outlook.com]
+   en System.Net.Mail.DataStopCommand.CheckResponse(SmtpStatusCode statusCode, String serverResponse)
+   en System.Net.Mail.DataStopCommand.Send(SmtpConnection conn)
+   en System.Net.ClosableStream.Close()
+   en System.Net.Mail.SmtpClient.Send(MailMessage message)
+   en AppWeb.ClasesAuxiliares.CorreoCls.EnviarCorreo(String NombreCorreo, String Asunto, String Contenido) en C:\@Jp\AppWeb\AppWeb\ClasesAuxiliares\CorreoCls.cs:línea 37

@@ -21,6 +21,7 @@ namespace AppWeb.Models
         public int NumAsientosDis { get; set; }
         public int TotalAsientos { get; set; }
         public int IdBus { get; set; }
+        public int Cantidad { get; set; }
 
     }
 }

@@ -1,0 +1,71 @@
+﻿@using AppWeb.Models;
+@model List<ReservaCls>
+
+@{
+    ViewBag.Title = "Index";
+    int c = 1;
+    decimal Total = 0;
+}
+
+<h2>Index</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Correlativo</th>
+            <th>Lugar Origen</th>
+            <th>Lugar Destino</th>
+            <th>Fecha Viaje</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+            <th>Operaciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @{
+                    string fechaCadena = item.FechaViaje.ToString("yyyy-MM-dd HH:mm");
+                    var subtotal = item.Cantidad * item.Precio;
+                    Total += subtotal;
+
+                }
+                <td>@c</td>
+                <td>@item.LugarOrigen</td>
+                <td>@item.LugarDestino</td>
+                <td>@fechaCadena</td>
+                <td>@item.Cantidad</td>
+                <td>@item.Precio</td>
+                <td>@subtotal</td>
+                <td>
+                    <button class="bi bi-trash btn btn-danger" onclick="Eliminar(@item.IdViaje)"></button>
+                </td>
+            </tr>
+            c = c + 1;
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="6" align="right" style="font-weight:bold">Total</td>
+            <td style="color: black; font-weight: bold" id="lblTotal">@Total</td>
+        </tr>
+    </tfoot>
+</table>
+
+<script>
+    function Eliminar(IdViaje) {
+        if (confirm("Desea eliminar la reserva?") == 1) {
+            var url = "Reserva/QuitarCookie/?IdViaje=" + IdViaje;
+            //obtiene la respuesta del controller
+            $.get(url, function (data) {
+                if (data == "OK") {
+                    alert("Se eliminó correctamente");
+                } else {
+                    alert("Ocurrió un error");
+                }
+            })
+        }
+    }
+</script>

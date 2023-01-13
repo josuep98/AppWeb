@@ -21,13 +21,13 @@ namespace AppWeb.Models
         }
     
         public int IIDVENTA { get; set; }
-        public Nullable<int> IIDCLIENTE { get; set; }
+        public Nullable<int> IIDUSUARIO { get; set; }
         public Nullable<decimal> TOTAL { get; set; }
         public Nullable<System.DateTime> FECHAVENTA { get; set; }
         public Nullable<int> BHABILITADO { get; set; }
     
-        public virtual Cliente Cliente { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DETALLEVENTA> DETALLEVENTA { get; set; }
+        public virtual Usuario Usuario { get; set; }
     }
 }

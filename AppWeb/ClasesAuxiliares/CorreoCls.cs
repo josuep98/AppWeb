@@ -24,7 +24,7 @@ namespace AppWeb.ClasesAuxiliares
                 MailMessage mail = new MailMessage();
                 mail.Subject = Asunto + " :)";
                 mail.IsBodyHtml = true;
-                mail.Body = "<h1>" + Contenido + "/h1>";
+                mail.Body = "<h1>" + Contenido + "</h1>";
                 mail.From = new MailAddress(Correo);
                 mail.To.Add(new MailAddress(NombreCorreo));
                 //Envío de correo

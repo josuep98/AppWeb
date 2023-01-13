@@ -439,6 +439,7 @@
     <Content Include="Views\PantallaPrincipal\Index.cshtml" />
     <Content Include="Views\Reserva\Index.cshtml" />
     <Content Include="Views\MisReservas\Index.cshtml" />
+    <Content Include="Views\MisReservas\_TablaMisReservas.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

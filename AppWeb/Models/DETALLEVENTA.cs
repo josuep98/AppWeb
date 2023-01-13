@@ -20,6 +20,7 @@ namespace AppWeb.Models
         public Nullable<int> IIDBUS { get; set; }
         public Nullable<decimal> PRECIO { get; set; }
         public Nullable<int> BHABILITADO { get; set; }
+        public Nullable<int> cantidad { get; set; }
     
         public virtual Bus Bus { get; set; }
         public virtual VENTA VENTA { get; set; }

@@ -14,6 +14,12 @@ namespace AppWeb.Models
     
     public partial class Usuario
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Usuario()
+        {
+            this.VENTA = new HashSet<VENTA>();
+        }
+    
         public int IIDUSUARIO { get; set; }
         public string NOMBREUSUARIO { get; set; }
         public string CONTRA { get; set; }
@@ -24,5 +30,7 @@ namespace AppWeb.Models
     
         public virtual Rol Rol { get; set; }
         public virtual TIPOUSUARIOREGISTRO TIPOUSUARIOREGISTRO { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<VENTA> VENTA { get; set; }
     }
 }

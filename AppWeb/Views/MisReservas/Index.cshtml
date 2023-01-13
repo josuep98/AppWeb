@@ -1,23 +1,54 @@
 ﻿@using AppWeb.Models;
 @model List<ReservaCls>
 
-@{
-    ViewBag.Title = "Index";
+@using (Ajax.BeginForm("Filtrar", "", new AjaxOptions
+{
+    HttpMethod = "POST",
+    UpdateTargetId = "divMisReservas",
+    InsertionMode = InsertionMode.Replace
+}, new { @id = "frmListado" }))
+
+{
+    <div id="divMisReservas">
+        @Html.Partial("_TablaMisReservas", Model);
+    </div>
+    <p style="text-align:center">
+        <button class="btn btn-primary" onclick="Grabar()">Grabar</button>
+    </p>
 }
 
-<h2>Index</h2>
+<script>
 
-<table>
-    <thead>
-        <tr>
-            <th>Correlativo</th>
-            <th>Lugar Origen</th>
-            <th>Lugar Destino</th>
-            <th>Fecha Viaje</th>
-            <th>Cantidad</th>
-            <th>Precio</th>
-            <th>Subtotal</th>
-            <th>Operaciones</th>
-        </tr>
-    </thead>
-</table>
+    function Grabar() {
+        if (confirm("Desea guardar la información?") == 1) {
+            var total = document.getElementById("lblTotal").innerHTML;
+            if (total == "0") {
+                alert("Debe elegir un viaje para guardar");
+                return;
+            }
+            $.get("MisReservas/GuardarDatos/?Total=" + total, function (data) {
+                if (data == "OK") {
+                    alert("Se guardo correctamente");
+                    $("#frmListado").trigger("submit");
+                } else {
+                    alert("Ocurrió un error");
+                }
+            })
+        }
+    }
+
+    function Eliminar(IdViaje) {
+        if (confirm("Desea eliminar la reserva?") == 1) {
+            var url = "Reserva/QuitarCookie/?IdViaje=" + IdViaje;
+            //obtiene la respuesta del controller
+            $.get(url, function (data) {
+                if (data == "OK") {
+                    alert("Se eliminó correctamente");
+                    $("#frmListado").trigger("submit");
+                } else {
+                    alert("Ocurrió un error");
+                }
+            })
+        }
+    }
+</script>
